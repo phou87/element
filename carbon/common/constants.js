@@ -1,0 +1,6 @@
+export const SCENES = {
+  LOGIN: 0,
+  FOLLOWING_FRIENDS: 1,
+  FIND_FRIENDS: 2,
+  PORTFOLIO: 3,
+};
