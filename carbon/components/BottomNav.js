@@ -1,4 +1,5 @@
 import {
+  PixelRatio,
   StyleSheet,
   Text,
   View,
@@ -9,6 +10,8 @@ import {
 import React, { Component } from 'react';
 import {SCENES} from '../common/constants'
 
+pixelRatio = PixelRatio.get();
+
 class BottomNav extends Component {
   props: {
     sceneIDSelected: number,
@@ -17,10 +20,13 @@ class BottomNav extends Component {
   };
 
   _renderNormalItem(sceneIDs, name) {
-    let selected = sceneIDs.indexOf(this.props.sceneIDSelected) === -1;
+    let selected = sceneIDs.indexOf(this.props.sceneIDSelected) !== -1;
     let style = selected
-      ? styles.itemContainerDeselected
-      : styles.itemContainerSelected;
+      ? styles.itemContainerSelected
+      : styles.itemContainerDeselected;
+    let textStyle = selected
+      ? styles.itemTextSelected
+      : styles.itemTextDeselected;
     let ItemContainer = selected
       ? View
       : TouchableOpacity;
@@ -29,7 +35,7 @@ class BottomNav extends Component {
         key={name}
         style={style}
         onPress={() => this.props.onSwitchNav(sceneIDs[0])}>
-        <Text style={styles.itemText}>
+        <Text style={textStyle}>
           {name}
         </Text>
       </ItemContainer>
@@ -37,11 +43,22 @@ class BottomNav extends Component {
   }
 
   _renderTransactionButton() {
+  	let selected = this.props.sceneIDSelected === SCENES.BUY_SELL;
+    let ItemContainer = selected
+      ? View
+      : TouchableOpacity;
+  
     return (
-      <View style={styles.transactButton}>
-        <Text style={styles.transactButtonText}>
-          {'$'}
-        </Text>
+      <View key="button">
+        <View style={styles.transactButtonShadow} />
+        <ItemContainer
+          onPress={() => this.props.onSwitchNav(SCENES.BUY_SELL)}
+          style={styles.transactButton}>
+          <Text style={styles.transactButtonText}>
+            {'$'}
+          </Text>
+        </ItemContainer>
+        
       </View>
     );
   }
@@ -65,34 +82,64 @@ class BottomNav extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#006400',
+    backgroundColor: 'black',
+    height: 120,
     justifyContent: 'center',
-    padding: 20,
+    padding: 15,
   },
   itemContainerSelected: {
-    backgroundColor: 'grey',
+    backgroundColor: 'black',
+    borderColor: 'dimgrey',
+    borderRadius: 4,
+    borderWidth: 1,
   },
   itemContainerDeselected: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
+    borderColor: 'deepskyblue',
+    borderRadius: 4,
+    borderWidth: 1,
   },
-  itemText: {
-    fontSize: 30,
+  itemTextSelected: {
+    color: 'dimgrey',
+    fontSize: 10 * pixelRatio,
+    textAlign: 'center',
+    margin: 5,
+  },
+  itemTextDeselected: {
+    color: 'deepskyblue',
+    fontSize: 10 * pixelRatio,
     textAlign: 'center',
     margin: 5,
   },
   transactButton: {
-    backgroundColor: '#A4D2A4',
-    borderRadius: 50,
+    backgroundColor: 'deepskyblue',
+    borderColor: 'black',
+    borderRadius: 20 * pixelRatio,
+    borderWidth: 1,
     justifyContent: 'center',
-    width: 100,
-    height: 100,
+    marginLeft: 10 * pixelRatio,
+    marginRight: 10 * pixelRatio,
+    width: 35 * pixelRatio,
+    height: 35 * pixelRatio,
+  },
+  transactButtonShadow: {
+    borderColor: 'white',
+    borderRadius: 20 * pixelRatio,
+    borderWidth: 1,
+    left: -1,
+    marginLeft: 10 * pixelRatio,
+    marginRight: 10 * pixelRatio,
+    position: 'absolute',
+    top: -1,
+    width: 36 * pixelRatio,
+    height: 36 * pixelRatio,
   },
   transactButtonText: {
+    alignSelf: 'center',
+    color: 'white',
     fontSize: 40,
-    textAlign: 'center',
   }
 });
 

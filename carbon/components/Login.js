@@ -3,22 +3,16 @@ import {
   View
 } from 'react-native';
 
-const FBSDK = require('react-native-fbsdk');
-const {
-  LoginButton,
-} = FBSDK;
+const {FBLogin, FBLoginManager} = require('react-native-facebook-login');
 
 class Login extends Component {
   render() {
     return (
       <View>
-        <LoginButton
-          readPermissions={["user_friends"]}
-          onLoginFinished={
-            (error, result) => {
-              this.props.onLogin(result, error);
-            }
-          }
+        <FBLogin
+          permissions={["user_friends"]}
+          onLogin={this.props.onLogin}
+          onLoginFound={this.props.onLogin}
           onLogoutFinished={() => alert("User logged out")}/>
       </View>
     );
