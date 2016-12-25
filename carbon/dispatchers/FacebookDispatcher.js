@@ -6,8 +6,8 @@ const FacebookDispatcher = {
       '/friends?fields=name,email&access_token=' +
       authData.access_token;
 
-    response = await fetch(api);
-    responseJSON = await response.json();
+    let response = await fetch(api);
+    let responseJSON = await response.json();
     
     let data = responseJSON.data;
     let friendships = loggedInUser.relation("friendships");
@@ -26,6 +26,17 @@ const FacebookDispatcher = {
     }
     
     return [potentialFriends, existingFriends];
+  },
+  
+  async fetchName(loggedInUser) {
+    let authData = loggedInUser.get('authData').facebook;
+    let api = 'https://graph.facebook.com/v2.7/me?access_token=' +
+      authData.access_token;
+
+    let response = await fetch(api);
+    let responseJSON = await response.json();
+    
+    return responseJSON.name;
   },
 }
 

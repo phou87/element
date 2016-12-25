@@ -13,6 +13,17 @@ import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import RemoveButton from '../components/RemoveButton'
 
 class FollowingFriendsScene extends Component {
+  componentDidMount() {
+    require('RCTDeviceEventEmitter').emit('remoteNotificationReceived', {
+      aps: {
+        alert: 'Sample notification',
+        badge: '+1',
+        sound: 'default',
+        category: 'REACT_NATIVE'
+      },
+    });
+  }
+
   _renderFriends() {
     let data = this.props.loggedInUser.get('authData').facebook;
     return this.props.existingFriends.map(friend =>

@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-
 import {
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
+
+import React, { Component } from 'react';
 
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import RemoveButton from '../components/RemoveButton'
@@ -29,17 +30,49 @@ class Portfolio extends Component {
   _renderAssets() {
     console.debug(this.state.assets);
   	return this.state.assets.map(asset =>
-      <View key={asset.id} style={styles.assetRow}>
+      <TouchableOpacity key={asset.id} style={styles.assetRow} onPress={() => this._onClickRow(asset)}>
         <Text style={styles.assetText}>
-      		{asset.attributes.cusip}
+      		{asset.attributes.cusip + (asset.attributes.isShort ? ' (Short)' : '')}
         </Text>
-      </View>
+        {this._renderRightRowSection(asset)}
+      </TouchableOpacity>
     );
+  }
+
+  _renderRightRowSection(asset) {
+  	if (asset.removed) {
+    	return (
+        <Text>
+          Removed!
+        </Text>
+      );
+    }
+    
+    return (
+      <RemoveButton onClick={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)} />
+    );
+  }
+  
+  _onClickRow(asset) {
+  	console.debug('heyo');
+  }
+  
+  _onRemoveAsset(cusip, isShort) {
+    ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this._onRemoveAssetCallback.bind(this));
+  }
+  
+  _onRemoveAssetCallback(assetID) {
+  	let index = this.state.assets.findIndex(asset => asset.id === assetID);
+    this.state.assets[index].removed = true;
+    this.forceUpdate();
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>MY PORTFOLIO</Text>
+        </View>
         {this._renderAssets()}
       </View>
     );
@@ -53,11 +86,20 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: '#575757',
   },
+  header: {
+    margin: 10,
+  },
+  headerText: {
+    color: 'white',
+    fontSize: 28,
+    textAlign: 'center',
+  },
   assetRow: {
     alignItems: 'center',
     alignSelf: 'stretch',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    margin: 10,
   },
   assetText: {
     color: 'white',

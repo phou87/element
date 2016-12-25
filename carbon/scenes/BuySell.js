@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
+import Parse from 'parse/react-native';
 
 import Button from '../components/Button'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
@@ -28,7 +29,14 @@ class BuySell extends Component {
     if (!this._checkInputs()) {
       return;
     }
-    ParseDispatcher.buyAsset(this.props.loggedInUser, this.state.cusipText, 1, this._onBuyCallback.bind(this));
+    ParseDispatcher.buyAsset(
+      this.props.loggedInUser,
+      this.state.cusipText,
+      1,
+      this.state.commentText,
+      this.state.shortSwitch,
+      this._onBuyCallback.bind(this),
+    );
   }
   
   _onBuyCallback(asset, error) {
@@ -39,6 +47,7 @@ class BuySell extends Component {
         [{text: 'OK'}],
       );
     } else {
+      ParseDispatcher.sendPushToFollowers(asset.attributes.cusip, "buy");
       Alert.alert(
         'Stock bought',
         'You successfully bought ' + asset.attributes.cusip + '!',
@@ -51,7 +60,14 @@ class BuySell extends Component {
     if (!this._checkInputs()) {
       return;
     }
-    ParseDispatcher.sellAsset(this.props.loggedInUser, this.state.cusipText, 1, this._onSellCallback.bind(this));
+    ParseDispatcher.sellAsset(
+      this.props.loggedInUser,
+      this.state.cusipText,
+      1,
+      this.state.commentText,
+      this.state.shortSwitch,
+      this._onSellCallback.bind(this),
+      );
   }
   
   _onSellCallback(asset, error) {
@@ -62,6 +78,7 @@ class BuySell extends Component {
         [{text: 'OK'}],
       );
     } else {
+      ParseDispatcher.sendPushToFollowers(asset.attributes.cusip, "sell");
       Alert.alert(
         'Stock sold',
         'You successfully sold ' + asset.attributes.cusip + '!',
@@ -86,26 +103,32 @@ class BuySell extends Component {
   }
 
 	render() {
+    /*
+    <View style={styles.transactionTypeRow}>
+      <Switch
+        onValueChange={(value) => this.setState({shortSwitch: value})}
+        value={this.state.shortSwitch}
+      />
+      <Text>
+        Short
+      </Text>
+    </View>
+    */
+  
   	return (
       <View style={styles.container}>
       	<Text style={styles.header}>
         	ADD STOCK
         </Text>
         <View style={styles.cusipRow}>
+          <Text style={styles.cusipText}>
+            SYMBOL
+          </Text>
         	<TextInput
             style={styles.cusip}
             onChangeText={(cusipText) => this.setState({cusipText})}
             value={this.state.cusipText}
           />
-          <View style={styles.transactionTypeRow}>
-            <Switch
-              onValueChange={(value) => this.setState({shortSwitch: value})}
-              value={this.state.shortSwitch}
-            />
-            <Text>
-              Short
-            </Text>
-          </View>
         </View>
         <TextInput
           style={styles.commentBox}
@@ -113,6 +136,7 @@ class BuySell extends Component {
           value={this.state.commentText}
           multiline={true}
           numberOfLines={4}
+          placeholder="Comments (optional)"
         />
         <View style={styles.notifyFriendsRow}>
           <Switch
@@ -136,7 +160,9 @@ const styles = StyleSheet.create({
   commentBox: {
     backgroundColor: 'white',
   	flex: 1,
+    fontSize: 20,
     height: 150,
+    padding: 10,
     margin: 20,
   },
   container: {
@@ -159,11 +185,17 @@ const styles = StyleSheet.create({
     fontSize: 30,
   	width: 100,
   },
+  cusipText: {
+    fontSize: 20,
+  },
   cusipRow: {
+    alignItems: 'center',
+    alignSelf: 'center',
   	flexDirection: 'row',
     height: 40,
     justifyContent: 'space-around',
     marginTop: 20,
+    width: 200,
   },
   transactionTypeRow: {
     alignItems: 'center',

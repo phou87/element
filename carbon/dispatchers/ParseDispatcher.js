@@ -17,13 +17,13 @@ const ParseDispatcher = {
         callback(user);
       },
       error: (user, error) => {
+        console.debug('shit', error);
         switch (error.code) {
           case Parse.Error.INVALID_SESSION_TOKEN:
             Parse.User.logOut().then(() => {
               console.log('we out');
             });
             break;
-          case Parse.Error.
           default:
             console.log(error.code);
         }
@@ -68,10 +68,11 @@ const ParseDispatcher = {
     });
   },
   
-  getAsset(user, cusip, callback) {
+  getAsset(user, cusip, isShort, callback) {
     let query = new Parse.Query(Asset);
     query.equalTo("cusip", cusip);
     query.equalTo("owner", user);
+    query.equalTo("isShort", isShort);
     query.find({
       success: results => {
         if (!results.length) {
@@ -86,10 +87,10 @@ const ParseDispatcher = {
     });
   },
   
-  buyAsset(user, cusip, quantity, callback) {
-  	ParseDispatcher.getAsset(user, cusip, asset => {
+  buyAsset(user, cusip, quantity, comment, isShort, callback) {
+  	ParseDispatcher.getAsset(user, cusip, isShort, asset => {
       if (!asset) {
-        asset = new Asset(cusip, quantity, user);
+        asset = new Asset(cusip, quantity, user, comment, isShort);
       } else {
         asset.set("quantity", asset.get("quantity") + quantity);
       }
@@ -100,10 +101,10 @@ const ParseDispatcher = {
     });
   },
 
-  sellAsset(user, cusip, quantity, callback) {
-  	ParseDispatcher.getAsset(user, cusip, asset => {
+  sellAsset(user, cusip, quantity, comment, isShort, callback) {
+  	ParseDispatcher.getAsset(user, cusip, isShort, asset => {
       if (!asset) {
-        asset = new Asset(cusip, quantity, user);
+        asset = new Asset(cusip, quantity, user, comment, isShort);
       } else {
         asset.set("quantity", asset.get("quantity") - quantity);
       }
@@ -123,6 +124,39 @@ const ParseDispatcher = {
         callback(results);
       },
       error: error => callback([]),
+    });
+  },
+  
+  removeAsset(user, cusip, isShort, callback) {
+    ParseDispatcher.getAsset(user, cusip, isShort, asset => {
+      if (!asset) {
+        return;
+      }
+      
+      let id = asset.id;
+      asset.destroy();
+      callback(id);
+    });
+  },
+  
+  attachDeviceTokenToUser(user, deviceToken) {
+    user.set("deviceToken", deviceToken);
+    user.save();
+  },
+  
+  saveUserName(user, name) {
+    user.set("name", name);
+    user.save();
+  },
+  
+  sendPushToFollowers(asset, activityType) {
+    Parse.Cloud.run('sendPushToFollowers', {asset, activityType}, {
+      success: res => {
+        console.debug('Successfully sent push notification.', res);
+      },
+      error: error => {
+        console.debug('Error sending push notification.', error);
+      },
     });
   },
 }

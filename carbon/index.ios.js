@@ -7,15 +7,18 @@
 import Parse from 'parse/react-native';
 import React, { Component } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   AppRegistry,
+  PushNotificationIOS,
   StyleSheet,
   Text,
   View
 } from 'react-native';
 
 import BuySell from './scenes/BuySell'
-import Login from './components/Login'
 import MainViewFrame from './components/MainViewFrame'
+import {LoginScreen} from './scenes/LoginScreen'
 import FindMore from './scenes/FindMore'
 import FollowingFriends from './scenes/FollowingFriends'
 import {Portfolio} from './scenes/Portfolio'
@@ -26,7 +29,9 @@ import ParseDispatcher from './dispatchers/ParseDispatcher'
 
 class carbon extends Component {
   state: {
+    deviceToken: string,
   	loggedInUser: object,
+    name: string,
     scene: number,
     potentialFriends: array<object>,
     existingFriends: array<object>,
@@ -37,23 +42,71 @@ class carbon extends Component {
     this.state = {
       scene: SCENES.LOGIN,
     };
+    //Parse.initialize("10000");
+    //Parse.serverURL = 'http://parseserver-hj59s-env.us-west-2.elasticbeanstalk.com/parse/';
     Parse.initialize("4444");
-    Parse.serverURL = 'http://localhost:1337/parse';
+    Parse.serverURL = 'http://192.168.10.175:1337/parse';
+    
+    this._onRegistered = this._onRegistered.bind(this);
+  }
+  
+  componentWillMount() {
+    PushNotificationIOS.addEventListener('register', this._onRegistered);
+    PushNotificationIOS.addEventListener('notification', this._onRemoteNotification);
+    PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
+
+    PushNotificationIOS.requestPermissions();
   }
 
-  _onLogin(results) {
-    console.log(results);
-		ParseDispatcher.loginWithFacebook(results.credentials, user => this._onLoginCallback(user));
+  componentWillUnmount() {
+    PushNotificationIOS.removeEventListener('register', this._onRegistered);
+    PushNotificationIOS.removeEventListener('notification', this._onRemoteNotification);
+    PushNotificationIOS.removeEventListener('localNotification', this._onLocalNotification);
+  }
+  
+  _onRegistered(deviceToken) {
+    this.setState({deviceToken});
+    if (this.state.loggedInUser) {
+      ParseDispatcher.attachDeviceTokenToUser(this.state.loggedInUser, deviceToken);
+    }
+  }
+
+  _onRemoteNotification(notification) {
+    Alert.alert(
+      'Push Notification Received',
+      'Alert message: ' + notification.getMessage(),
+      [{
+        text: 'Dismiss',
+        onPress: null,
+      }]
+    );
+  }
+
+  _onLocalNotification(notification){
+    Alert.alert(
+      'Local Notification Received',
+      'Alert message: ' + notification.getMessage(),
+      [{
+        text: 'Dismiss',
+        onPress: null,
+      }]
+    );
   }
   
   async _onLoginCallback(user) {
+    let name = await FacebookDispatcher.fetchName(user);
+    ParseDispatcher.saveUserName(user, name);
 		let [potentialFriends, existingFriends] = await FacebookDispatcher.fetchFriends(user);
     this.setState({
       potentialFriends,
       existingFriends,
+      name,
     	loggedInUser: user,
       scene: SCENES.FOLLOWING_FRIENDS,
     });
+    if (this.state.deviceToken) {
+      ParseDispatcher.attachDeviceTokenToUser(user, this.state.deviceToken);
+    }
   }
   
   _onLogout() {
@@ -83,15 +136,7 @@ class carbon extends Component {
     switch (this.state.scene) {
       case SCENES.LOGIN:
         return (
-          <View style={styles.loginContainer}>
-            <Text style={styles.welcome}>
-              SHAREFOLIO
-            </Text>
-            <Text style={styles.description}>
-              Portfolio Sharing Made Easy
-            </Text>
-            <Login onLogin={this._onLogin.bind(this)} />
-          </View>
+          <LoginScreen onLogin={this._onLoginCallback.bind(this)} />
         );
       case SCENES.FIND_FRIENDS:
         child = (
@@ -150,20 +195,6 @@ const styles = StyleSheet.create({
   },
   sceneContainer: {
   	flex: 1,
-  },
-  loginContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  description: {
-    marginBottom: 50,
   },
   instructions: {
     textAlign: 'center',

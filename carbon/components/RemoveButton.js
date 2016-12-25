@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   },
   cross: {
     backgroundColor: 'transparent',
+    color: '#04A0FD',
     fontSize: 40,
     paddingBottom: 4,
   },
