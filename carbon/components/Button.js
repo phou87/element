@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'white',
     fontSize: 15,
-    paddingBottom: 4,
+    lineHeight: 15,
   },
 });
 

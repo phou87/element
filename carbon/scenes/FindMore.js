@@ -17,7 +17,6 @@ class FindMoreScene extends Component {
   _renderPotentialFriends() {
     let data = this.props.loggedInUser.get('authData').facebook;
     return this.props.potentialFriends.map(friend =>
-      console.debug('https://graph.facebook.com/v2.7/' + friend.id + '/picture?access_token='+data.access_token) || 
       <View key={friend.id} style={styles.friendRow}>
         <Image
           style={{width: 50, height: 50}}
@@ -34,7 +33,7 @@ class FindMoreScene extends Component {
   _renderRightRowSection(friend) {
   	if (friend.friended) {
     	return (
-        <Text>
+        <Text style={styles.addedText}>
           Added!
         </Text>
       );
@@ -78,6 +77,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     backgroundColor: '#575757',
+  },
+  addedText: {
+    color: 'white',
   },
   friendRow: {
     alignItems: 'center',

@@ -8,6 +8,8 @@ import {
 
 import {FBLoginManager} from 'react-native-facebook-login';
 
+import {SCENES} from '../common/constants'
+
 import Button from './Button'
 import ProfilePic from './ProfilePic'
 
@@ -28,6 +30,7 @@ class Header extends Component {
           width={50}
           id={authData.id}
           accessToken={authData.access_token}
+          onClick={() => this.props.onSwitchNav(SCENES.PORTFOLIO)}
         />
         <Button onClick={() => this.onClick()} buttonStyle={styles.logoutButton} textStyle={styles.logoutText}>
           Log Out
@@ -45,6 +48,7 @@ const styles = StyleSheet.create({
     height: 85,
     justifyContent: 'space-between',
     padding: 10,
+    paddingTop: 15,
   },
   logoutButton: {
     backgroundColor: 'white',

@@ -2,6 +2,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   ScrollView,
 } from 'react-native';
@@ -13,28 +14,19 @@ import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import RemoveButton from '../components/RemoveButton'
 
 class FollowingFriendsScene extends Component {
-  componentDidMount() {
-    require('RCTDeviceEventEmitter').emit('remoteNotificationReceived', {
-      aps: {
-        alert: 'Sample notification',
-        badge: '+1',
-        sound: 'default',
-        category: 'REACT_NATIVE'
-      },
-    });
-  }
-
   _renderFriends() {
     let data = this.props.loggedInUser.get('authData').facebook;
     return this.props.existingFriends.map(friend =>
       <View key={friend.id} style={styles.friendRow}>
-        <Image
-          style={{width: 50, height: 50}}
-          source={{uri: 'https://graph.facebook.com/v2.7/' + friend.id + '/picture?access_token='+data.access_token}}
-        />
-        <Text style={styles.friendName}>
-          {friend.name}
-        </Text>
+        <TouchableOpacity style={styles.friendRowTouchable} onPress={() => this.props.onSwitchPortfolio(friend)}>
+          <Image
+            style={{width: 50, height: 50}}
+            source={{uri: 'https://graph.facebook.com/v2.7/' + friend.id + '/picture?access_token='+data.access_token}}
+          />
+          <Text style={styles.friendName}>
+            {friend.name}
+          </Text>
+        </TouchableOpacity>
         {this._renderRightRowSection(friend)}
       </View>
     );
@@ -43,7 +35,7 @@ class FollowingFriendsScene extends Component {
   _renderRightRowSection(friend) {
   	if (friend.unfriended) {
     	return (
-        <Text>
+        <Text style={styles.removedText}>
           Removed!
         </Text>
       );
@@ -94,10 +86,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+  friendRowTouchable: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   friendName: {
     fontSize: 20,
     textAlign: 'left',
     margin: 10,
+  },
+  removedText: {
+    color: 'white',
   },
 });
 

@@ -17,7 +17,7 @@ const ParseDispatcher = {
         callback(user);
       },
       error: (user, error) => {
-        console.debug('shit', error);
+        console.debug('shit', error, Parse.Error.INVALID_SESSION_TOKEN);
         switch (error.code) {
           case Parse.Error.INVALID_SESSION_TOKEN:
             Parse.User.logOut().then(() => {
@@ -33,7 +33,7 @@ const ParseDispatcher = {
   
   addFriend(user, friend_id, callback) {
     console.debug('add', friend_id, user);
-  	let friendship = new Friendship(friend_id);
+  	let friendship = new Friendship(friend_id, user.id);
     friendship.save(null, {
       success: friendship => {
         let relation = user.relation("friendships");
@@ -116,14 +116,15 @@ const ParseDispatcher = {
   },
   
   getAllAssets(user, callback) {
+    console.debug('getting assets', user);
     let query = new Parse.Query(Asset);
     query.equalTo("owner", user);
     query.find({
       success: results => {
-        console.debug(results);
+        console.debug('assets got', results);
         callback(results);
       },
-      error: error => callback([]),
+      error: error => console.debug(error) && callback([]),
     });
   },
   
@@ -139,13 +140,23 @@ const ParseDispatcher = {
     });
   },
   
+  getUserForFriend(friend_id, callback) {
+    let query = new Parse.Query(Parse.User);
+    query.equalTo("facebookID", friend_id);
+    query.find({
+      success: results => callback(results),
+      error: error => console.debug(error) && callback([]),
+    });
+  },
+  
   attachDeviceTokenToUser(user, deviceToken) {
     user.set("deviceToken", deviceToken);
     user.save();
   },
   
-  saveUserName(user, name) {
+  saveUserMetadata(user, name, facebookID) {
     user.set("name", name);
+    user.set("facebookID", facebookID);
     user.save();
   },
   

@@ -18,7 +18,6 @@ class LoginScreen extends Component {
   }
 
   _onLogin(results) {
-    console.debug('loading?', this.state.isLoading);
     if (this.state.isLoading) {
       return;
     }

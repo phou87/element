@@ -12,6 +12,7 @@ const FacebookDispatcher = {
     let data = responseJSON.data;
     let friendships = loggedInUser.relation("friendships");
     let list = await friendships.query().find();
+    console.debug('reations', list, friendships);
     let friendIds = list.map(friend => friend.get("friend_id"));
     
     let potentialFriends = [];
@@ -24,7 +25,7 @@ const FacebookDispatcher = {
         existingFriends.push(friend);
       }
     }
-    
+    console.debug(existingFriends);
     return [potentialFriends, existingFriends];
   },
   

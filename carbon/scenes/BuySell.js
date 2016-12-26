@@ -118,32 +118,36 @@ class BuySell extends Component {
   	return (
       <View style={styles.container}>
       	<Text style={styles.header}>
-        	ADD STOCK
+        	Add Security
         </Text>
         <View style={styles.cusipRow}>
           <Text style={styles.cusipText}>
-            SYMBOL
+            Symbol
           </Text>
         	<TextInput
+            autoCapitalize="characters"
+            maxLength={4}
             style={styles.cusip}
             onChangeText={(cusipText) => this.setState({cusipText})}
             value={this.state.cusipText}
           />
         </View>
         <TextInput
+          blurOnSubmit={true}
           style={styles.commentBox}
           onChangeText={(commentText) => this.setState({commentText})}
           value={this.state.commentText}
           multiline={true}
           numberOfLines={4}
           placeholder="Comments (optional)"
+          returnKeyType="done"
         />
         <View style={styles.notifyFriendsRow}>
           <Switch
             onValueChange={(value) => this.setState({notifyFriendsSwitch: value})}
             value={this.state.notifyFriendsSwitch}
           />
-        	<Text>
+        	<Text style={styles.notifyFriendsText}>
             Notify Friends
           </Text>
         </View>
@@ -209,6 +213,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   	justifyContent: 'space-around',
     width: 160,
+  },
+  notifyFriendsText: {
+    fontWeight: 'bold',
   },
 });
 

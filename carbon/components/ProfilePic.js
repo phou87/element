@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   Image,
+  TouchableOpacity,
 } from 'react-native';
 
 class ProfilePic extends Component {
@@ -11,10 +12,12 @@ class ProfilePic extends Component {
       this.props.accessToken;
 		console.debug(source);
     return (
-      <Image
-        source={{uri: source}}
-        style={{width: this.props.width, height: this.props.height}}
-      />
+      <TouchableOpacity onPress={this.props.onClick}>
+        <Image
+          source={{uri: source}}
+          style={{width: this.props.width, height: this.props.height}}
+        />
+      </TouchableOpacity>
     );
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,7 +14,12 @@ class MainViewFrame extends Component {
   render() {
     return (
       <View style={styles.mainView}>
-        <Header loggedInUser={this.props.loggedInUser} onLogout={this.props.onLogout} />
+        <StatusBar backgroundColor="black" barStyle="light-content" />
+        <Header
+          loggedInUser={this.props.loggedInUser}
+          onLogout={this.props.onLogout}
+          onSwitchNav={this.props.onSwitchNav}
+        />
         <View style={styles.middleContent}>
         	{this.props.children}
         </View>

@@ -35,6 +35,7 @@ class carbon extends Component {
     scene: number,
     potentialFriends: array<object>,
     existingFriends: array<object>,
+    portfolioUser: object,
   };
 
   constructor(props) {
@@ -73,8 +74,8 @@ class carbon extends Component {
 
   _onRemoteNotification(notification) {
     Alert.alert(
-      'Push Notification Received',
-      'Alert message: ' + notification.getMessage(),
+      'Friend Activity',
+      notification.getMessage(),
       [{
         text: 'Dismiss',
         onPress: null,
@@ -84,8 +85,8 @@ class carbon extends Component {
 
   _onLocalNotification(notification){
     Alert.alert(
-      'Local Notification Received',
-      'Alert message: ' + notification.getMessage(),
+      'Friend Activity',
+      notification.getMessage(),
       [{
         text: 'Dismiss',
         onPress: null,
@@ -95,7 +96,7 @@ class carbon extends Component {
   
   async _onLoginCallback(user) {
     let name = await FacebookDispatcher.fetchName(user);
-    ParseDispatcher.saveUserName(user, name);
+    ParseDispatcher.saveUserMetadata(user, name, user.get('authData').facebook.id);
 		let [potentialFriends, existingFriends] = await FacebookDispatcher.fetchFriends(user);
     this.setState({
       potentialFriends,
@@ -118,9 +119,22 @@ class carbon extends Component {
 
   _onSwitchNav(id) {
     this.setState({
+      portfolioUser: null,
       scene: id,
     });
     this._refreshFriends().done();
+  }
+  
+  _onSwitchPortfolio(friend) {
+    ParseDispatcher.getUserForFriend(friend.id, friend => {
+      if (!friend || !friend.length) {
+        return;
+      }
+      this.setState({
+        portfolioUser: friend[0],
+        scene: SCENES.PORTFOLIO,
+      });
+    });
   }
   
   async _refreshFriends() {
@@ -151,13 +165,17 @@ class carbon extends Component {
           <FollowingFriends
             {...this.state}
             onSwitchNav={(id) => this._onSwitchNav(id)}
+            onSwitchPortfolio={(friend) => this._onSwitchPortfolio(friend)}
           />
         );
         break;
       case SCENES.PORTFOLIO:
+        let user = this.state.portfolioUser ? this.state.portfolioUser : this.state.loggedInUser;
         child = (
           <Portfolio
             {...this.state}
+            loggedInUser={user}
+            ownPortfolio={!this.state.portfolioUser}
           />
         );
         break;
