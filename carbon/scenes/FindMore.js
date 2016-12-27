@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   StyleSheet,
   Text,
@@ -12,22 +13,17 @@ import FacebookDispatcher from '../dispatchers/FacebookDispatcher'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import TopNavMultiple from '../components/TopNavMultiple'
 import {SCENES} from '../common/constants'
+import {FacebookURI} from '../common/FacebookURI';
 
-class FindMoreScene extends Component {
-  _renderPotentialFriends() {
-    let data = this.props.loggedInUser.get('authData').facebook;
-    return this.props.potentialFriends.map(friend =>
-      <View key={friend.id} style={styles.friendRow}>
-        <Image
-          style={{width: 50, height: 50}}
-          source={{uri: 'https://graph.facebook.com/v2.7/' + friend.id + '/picture?access_token='+data.access_token}}
-        />
-        <Text style={styles.friendName}>
-          {friend.name}
-        </Text>
-        {this._renderRightRowSection(friend)}
-      </View>
-    );
+class PotentialFriendRow extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.onAddFriend = this.onAddFriend.bind(this);
+  }
+  
+  onAddFriend() {
+  	ParseDispatcher.addFriend(this.props.loggedInUser, this.props.friend.id, this.props.onAddFriendCallback);
   }
   
   _renderRightRowSection(friend) {
@@ -40,15 +36,71 @@ class FindMoreScene extends Component {
     }
     
     return (
-      <AddButton onClick={() => this._onAddFriend(friend.id)} />
+      <AddButton onClick={this.onAddFriend} />
+    );
+  }
+
+  render() {
+    let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
+  
+    return (
+      <View style={styles.friendRow}>
+        <Image
+          style={{width: 50, height: 50}}
+          source={{uri: uri.getURI()}}
+        />
+        <Text style={styles.friendName}>
+          {this.props.friend.name}
+        </Text>
+        {this._renderRightRowSection(this.props.friend)}
+      </View>
+    );
+  }
+}
+
+class FindMoreScene extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+    };
+    
+    this.onAddFriendCallback = this.onAddFriendCallback.bind(this);
+    this.refreshFriends = this.refreshFriends.bind(this);
+  }
+
+  async componentWillMount() {
+    this.setState({
+      isLoading: true,
+    }, this.refreshFriends);
+  }
+  
+  async refreshFriends() {
+    await this.props.refreshFriends();
+    this.setState({
+      isLoading: false,
+    });
+  }
+
+  _renderPotentialFriends() {
+    if (this.state.isLoading) {
+      return <ActivityIndicator />;
+    }
+  
+    let authData = this.props.loggedInUser.get('authData').facebook;
+    
+    return this.props.potentialFriends.map(friend =>
+      <PotentialFriendRow
+        accessToken={authData.access_token}
+        friend={friend}
+        key={friend.id}
+        loggedInUser={this.props.loggedInUser}
+        onAddFriendCallback={this.onAddFriendCallback}
+      />
     );
   }
   
-  _onAddFriend(friend_id) {
-  	ParseDispatcher.addFriend(this.props.loggedInUser, friend_id, this._onAddFriendCallback.bind(this));
-  }
-  
-  _onAddFriendCallback(friend_id) {
+  onAddFriendCallback(friend_id) {
   	let index = this.props.potentialFriends.findIndex(friend => friend.id === friend_id);
     this.props.potentialFriends[index].friended = true;
     this.forceUpdate();
@@ -63,7 +115,7 @@ class FindMoreScene extends Component {
             {id: SCENES.FIND_FRIENDS, name: 'Find More'},
           ]}
           selected={SCENES.FIND_FRIENDS}
-          onSwitchNav={(id) => this.props.onSwitchNav(id)}
+          onSwitchNav={this.props.onSwitchNav}
         />
         {this._renderPotentialFriends()}
       </View>

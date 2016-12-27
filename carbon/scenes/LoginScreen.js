@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   StyleSheet,
   Text,
   View
@@ -28,6 +29,17 @@ class LoginScreen extends Component {
   }
   
   _onLoginCallback(user) {
+    if (!user) {
+      this.setState({
+        isLoading: false,
+      });
+      Alert.alert(
+        'Error',
+        'Could not log in. Please try restarting Sharefolio.',
+        [{text: 'OK'}],
+      );
+      return;
+    }
     this.props.onLogin(user);
   }
   

@@ -41,18 +41,24 @@ class carbon extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      existingFriends: [],
+      potentialFriends: [],
       scene: SCENES.LOGIN,
     };
-    //Parse.initialize("10000");
-    //Parse.serverURL = 'http://parseserver-hj59s-env.us-west-2.elasticbeanstalk.com/parse/';
-    Parse.initialize("4444");
-    Parse.serverURL = 'http://192.168.10.175:1337/parse';
+    Parse.initialize("10000");
+    Parse.serverURL = 'http://parseserver-hj59s-env.us-west-2.elasticbeanstalk.com/parse/';
+    //Parse.initialize("4444");
+    //Parse.serverURL = 'http://192.168.10.175:1337/parse';
     
-    this._onRegistered = this._onRegistered.bind(this);
+    this.onLogout = this.onLogout.bind(this);
+    this.onRegistered = this.onRegistered.bind(this);
+    this.onSwitchNav = this.onSwitchNav.bind(this);
+    this.onSwitchPortfolio = this.onSwitchPortfolio.bind(this);
+    this.refreshFriends = this.refreshFriends.bind(this);
   }
   
   componentWillMount() {
-    PushNotificationIOS.addEventListener('register', this._onRegistered);
+    PushNotificationIOS.addEventListener('register', this.onRegistered);
     PushNotificationIOS.addEventListener('notification', this._onRemoteNotification);
     PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
 
@@ -60,12 +66,12 @@ class carbon extends Component {
   }
 
   componentWillUnmount() {
-    PushNotificationIOS.removeEventListener('register', this._onRegistered);
+    PushNotificationIOS.removeEventListener('register', this.onRegistered);
     PushNotificationIOS.removeEventListener('notification', this._onRemoteNotification);
     PushNotificationIOS.removeEventListener('localNotification', this._onLocalNotification);
   }
   
-  _onRegistered(deviceToken) {
+  onRegistered(deviceToken) {
     this.setState({deviceToken});
     if (this.state.loggedInUser) {
       ParseDispatcher.attachDeviceTokenToUser(this.state.loggedInUser, deviceToken);
@@ -73,6 +79,7 @@ class carbon extends Component {
   }
 
   _onRemoteNotification(notification) {
+    /*
     Alert.alert(
       'Friend Activity',
       notification.getMessage(),
@@ -81,9 +88,11 @@ class carbon extends Component {
         onPress: null,
       }]
     );
+    */
   }
 
   _onLocalNotification(notification){
+    /*
     Alert.alert(
       'Friend Activity',
       notification.getMessage(),
@@ -92,40 +101,35 @@ class carbon extends Component {
         onPress: null,
       }]
     );
+    */
   }
   
   async _onLoginCallback(user) {
     let name = await FacebookDispatcher.fetchName(user);
-    ParseDispatcher.saveUserMetadata(user, name, user.get('authData').facebook.id);
-		let [potentialFriends, existingFriends] = await FacebookDispatcher.fetchFriends(user);
+    ParseDispatcher.saveUserMetadata(user, name, user.get('authData').facebook.id, this.state.deviceToken);
+    
     this.setState({
-      potentialFriends,
-      existingFriends,
       name,
     	loggedInUser: user,
       scene: SCENES.FOLLOWING_FRIENDS,
     });
-    if (this.state.deviceToken) {
-      ParseDispatcher.attachDeviceTokenToUser(user, this.state.deviceToken);
-    }
   }
   
-  _onLogout() {
+  onLogout() {
     this.setState({
       loggedInUser: null,
       scene: SCENES.LOGIN,
     });
   }
 
-  _onSwitchNav(id) {
+  onSwitchNav(id) {
     this.setState({
       portfolioUser: null,
       scene: id,
     });
-    this._refreshFriends().done();
   }
   
-  _onSwitchPortfolio(friend) {
+  onSwitchPortfolio(friend) {
     ParseDispatcher.getUserForFriend(friend.id, friend => {
       if (!friend || !friend.length) {
         return;
@@ -137,7 +141,7 @@ class carbon extends Component {
     });
   }
   
-  async _refreshFriends() {
+  async refreshFriends() {
 		let [potentialFriends, existingFriends] = await FacebookDispatcher.fetchFriends(this.state.loggedInUser);
     this.setState({
       potentialFriends,
@@ -156,7 +160,8 @@ class carbon extends Component {
         child = (
           <FindMore
             {...this.state}
-            onSwitchNav={(id) => this._onSwitchNav(id)}
+            onSwitchNav={this.onSwitchNav}
+            refreshFriends={this.refreshFriends}
           />
         );
         break;
@@ -164,8 +169,9 @@ class carbon extends Component {
         child = (
           <FollowingFriends
             {...this.state}
-            onSwitchNav={(id) => this._onSwitchNav(id)}
-            onSwitchPortfolio={(friend) => this._onSwitchPortfolio(friend)}
+            onSwitchNav={this.onSwitchNav}
+            onSwitchPortfolio={this.onSwitchPortfolio}
+            refreshFriends={this.refreshFriends}
           />
         );
         break;
@@ -187,11 +193,12 @@ class carbon extends Component {
         );
         break;
     }
+    
     return (
       <MainViewFrame
         {...this.state}
-        onLogout={() => this._onLogout()}
-        onSwitchNav={(id) => this._onSwitchNav(id)}
+        onLogout={this.onLogout}
+        onSwitchNav={this.onSwitchNav}
       >
         {child}
       </MainViewFrame>

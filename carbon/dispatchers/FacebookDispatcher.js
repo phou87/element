@@ -1,18 +1,19 @@
+import {FacebookURI} from '../common/FacebookURI';
+
 const FacebookDispatcher = {
   async fetchFriends(loggedInUser) {
     let authData = loggedInUser.get('authData').facebook;
-    let api = 'https://graph.facebook.com/v2.7/' +
-      authData.id +
-      '/friends?fields=name,email&access_token=' +
-      authData.access_token;
-
-    let response = await fetch(api);
+    
+    let uri = new FacebookURI(authData.access_token, authData.id + '/friends');
+    uri.addParam('fields', 'name,email');
+    
+    let response = await fetch(uri.getURI());
     let responseJSON = await response.json();
     
     let data = responseJSON.data;
     let friendships = loggedInUser.relation("friendships");
     let list = await friendships.query().find();
-    console.debug('reations', list, friendships);
+
     let friendIds = list.map(friend => friend.get("friend_id"));
     
     let potentialFriends = [];
@@ -25,16 +26,15 @@ const FacebookDispatcher = {
         existingFriends.push(friend);
       }
     }
-    console.debug(existingFriends);
+
     return [potentialFriends, existingFriends];
   },
   
   async fetchName(loggedInUser) {
     let authData = loggedInUser.get('authData').facebook;
-    let api = 'https://graph.facebook.com/v2.7/me?access_token=' +
-      authData.access_token;
+    let uri = new FacebookURI(authData.access_token, 'me');
 
-    let response = await fetch(api);
+    let response = await fetch(uri.getURI());
     let responseJSON = await response.json();
     
     return responseJSON.name;

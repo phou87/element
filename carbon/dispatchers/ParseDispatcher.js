@@ -13,26 +13,29 @@ const ParseDispatcher = {
     
     Parse.FacebookUtils.logIn(authData, {
       success: user => {
-        console.log('success!', user);
         callback(user);
       },
       error: (user, error) => {
-        console.debug('shit', error, Parse.Error.INVALID_SESSION_TOKEN);
         switch (error.code) {
           case Parse.Error.INVALID_SESSION_TOKEN:
-            Parse.User.logOut().then(() => {
-              console.log('we out');
-            });
+            Parse.User.logOut().then(
+              success => {
+                callback();
+              },
+              failure => {
+                callback();
+              },
+            );
             break;
           default:
-            console.log(error.code);
+            callback();
+            break;
         }
       }
     });
   },
   
   addFriend(user, friend_id, callback) {
-    console.debug('add', friend_id, user);
   	let friendship = new Friendship(friend_id, user.id);
     friendship.save(null, {
       success: friendship => {
@@ -154,9 +157,12 @@ const ParseDispatcher = {
     user.save();
   },
   
-  saveUserMetadata(user, name, facebookID) {
+  saveUserMetadata(user, name, facebookID, deviceToken) {
     user.set("name", name);
     user.set("facebookID", facebookID);
+    if (deviceToken) {
+      user.set("deviceToken", deviceToken);
+    }
     user.save();
   },
   

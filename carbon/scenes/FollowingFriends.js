@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   StyleSheet,
   Text,
@@ -12,24 +13,22 @@ import TopNavMultiple from '../components/TopNavMultiple'
 import {SCENES} from '../common/constants'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import RemoveButton from '../components/RemoveButton'
+import {FacebookURI} from '../common/FacebookURI';
 
-class FollowingFriendsScene extends Component {
-  _renderFriends() {
-    let data = this.props.loggedInUser.get('authData').facebook;
-    return this.props.existingFriends.map(friend =>
-      <View key={friend.id} style={styles.friendRow}>
-        <TouchableOpacity style={styles.friendRowTouchable} onPress={() => this.props.onSwitchPortfolio(friend)}>
-          <Image
-            style={{width: 50, height: 50}}
-            source={{uri: 'https://graph.facebook.com/v2.7/' + friend.id + '/picture?access_token='+data.access_token}}
-          />
-          <Text style={styles.friendName}>
-            {friend.name}
-          </Text>
-        </TouchableOpacity>
-        {this._renderRightRowSection(friend)}
-      </View>
-    );
+class FriendRow extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.onRemoveFriend = this.onRemoveFriend.bind(this);
+    this.onSwitchPortfolio = this.onSwitchPortfolio.bind(this);
+  }
+  
+  onRemoveFriend() {
+  	ParseDispatcher.removeFriend(this.props.loggedInUser, this.props.friend.id, this.props.onRemoveFriendCallback);
+  }
+  
+  onSwitchPortfolio() {
+    this.props.onSwitchPortfolio(this.props.friend);
   }
 
   _renderRightRowSection(friend) {
@@ -42,15 +41,75 @@ class FollowingFriendsScene extends Component {
     }
     
     return (
-      <RemoveButton onClick={() => this._onRemoveFriend(friend.id)} />
+      <RemoveButton onClick={this.onRemoveFriend} />
     );
   }
 
-  _onRemoveFriend(friend_id) {
-  	ParseDispatcher.removeFriend(this.props.loggedInUser, friend_id, this._onRemoveFriendCallback.bind(this));
+  render() {
+    let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
+    return (
+      <View style={styles.friendRow}>
+        <TouchableOpacity
+          style={styles.friendRowTouchable}
+          onPress={this.onSwitchPortfolio}
+        >
+          <Image
+            style={{width: 50, height: 50}}
+            source={{uri: uri.getURI()}}
+          />
+          <Text style={styles.friendName}>
+            {this.props.friend.name}
+          </Text>
+        </TouchableOpacity>
+        {this._renderRightRowSection(this.props.friend)}
+      </View>
+    );
+  }
+}
+
+class FollowingFriendsScene extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+    };
+    
+    this.onRemoveFriendCallback = this.onRemoveFriendCallback.bind(this);
+    this.refreshFriends = this.refreshFriends.bind(this);
   }
 
-  _onRemoveFriendCallback(friend_id) {
+  async componentWillMount() {
+    this.setState({
+      isLoading: true,
+    }, this.refreshFriends);
+  }
+  
+  async refreshFriends() {
+    await this.props.refreshFriends();
+    this.setState({
+      isLoading: false,
+    });
+  }
+
+  _renderFriends() {
+    if (this.state.isLoading) {
+      return <ActivityIndicator />;
+    }
+  
+    let authData = this.props.loggedInUser.get('authData').facebook;
+    
+    return this.props.existingFriends.map(friend =>
+      <FriendRow
+        accessToken={authData.access_token}
+        friend={friend}
+        key={friend.id}
+        loggedInUser={this.props.loggedInUser}
+        onRemoveFriendCallback={this.onRemoveFriendCallback}
+      />
+    );
+  }
+
+  onRemoveFriendCallback(friend_id) {
   	let index = this.props.existingFriends.findIndex(friend => friend.id === friend_id);
     this.props.existingFriends[index].unfriended = true;
     this.forceUpdate();
