@@ -4,17 +4,16 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import {FacebookURI} from '../common/FacebookURI';
+
 class ProfilePic extends Component {
   render() {
-    const source = 'https://graph.facebook.com/v2.7/' +
-      this.props.id +
-      '/picture?access_token=' +
-      this.props.accessToken;
-		console.debug(source);
+    let uri = new FacebookURI(this.props.accessToken, this.props.id + '/picture');
+    
     return (
       <TouchableOpacity onPress={this.props.onClick}>
         <Image
-          source={{uri: source}}
+          source={{uri: uri.getURI()}}
           style={{width: this.props.width, height: this.props.height}}
         />
       </TouchableOpacity>

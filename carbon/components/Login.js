@@ -16,7 +16,7 @@ class Login extends Component {
           onLoginFound={this.props.onLogin}
           onLogoutFinished={() => alert("User logged out")}
           onError={data => console.debug('Error: ', data)}
-          onPermissionsMissing={() => alert('Missing')}/>
+          onPermissionsMissing={(x) => console.debug('Error: ', x)}/>
       </View>
     );
   }

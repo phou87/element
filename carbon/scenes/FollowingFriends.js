@@ -71,20 +71,13 @@ class FollowingFriendsScene extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
+      isLoading: true,
     };
     
     this.onRemoveFriendCallback = this.onRemoveFriendCallback.bind(this);
-    this.refreshFriends = this.refreshFriends.bind(this);
   }
 
   async componentWillMount() {
-    this.setState({
-      isLoading: true,
-    }, this.refreshFriends);
-  }
-  
-  async refreshFriends() {
     await this.props.refreshFriends();
     this.setState({
       isLoading: false,
@@ -105,6 +98,7 @@ class FollowingFriendsScene extends Component {
         key={friend.id}
         loggedInUser={this.props.loggedInUser}
         onRemoveFriendCallback={this.onRemoveFriendCallback}
+        onSwitchPortfolio={this.props.onSwitchPortfolio}
       />
     );
   }

@@ -14,15 +14,26 @@ import Button from './Button'
 import ProfilePic from './ProfilePic'
 
 class Header extends Component {
-	onClick() {
+  constructor(props) {
+    super(props);
+    
+    this.onClickLogout = this.onClickLogout.bind(this);
+    this.onClickProfilePic = this.onClickProfilePic.bind(this);
+  }
+
+	onClickLogout() {
     FBLoginManager.logout((error, data) => {
       this.props.onLogout();
     });
   }
+  
+  onClickProfilePic() {
+    this.props.onSwitchNav(SCENES.PORTFOLIO);
+  }
 
   render() {
     let authData = this.props.loggedInUser.get('authData').facebook;
-  	console.debug(authData);
+
     return (
       <View style={styles.container}>
         <ProfilePic
@@ -30,9 +41,9 @@ class Header extends Component {
           width={50}
           id={authData.id}
           accessToken={authData.access_token}
-          onClick={() => this.props.onSwitchNav(SCENES.PORTFOLIO)}
+          onClick={this.onClickProfilePic}
         />
-        <Button onClick={() => this.onClick()} buttonStyle={styles.logoutButton} textStyle={styles.logoutText}>
+        <Button onClick={this.onClickLogout} buttonStyle={styles.logoutButton} textStyle={styles.logoutText}>
           Log Out
         </Button>
       </View>

@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -16,19 +17,28 @@ class Portfolio extends Component {
   	this.state = {
       assets: [],
       expandedAssets: [],
+      isLoading: true,
     };
+    
+    this.onGetAssets = this.onGetAssets.bind(this);
   }
 
   componentWillMount() {
-    console.debug('ountin', this.props.loggedInUser);
-    ParseDispatcher.getAllAssets(this.props.loggedInUser, this._onGetAssets.bind(this));
+    ParseDispatcher.getAllAssets(this.props.loggedInUser, this.onGetAssets);
   }
   
-  _onGetAssets(assets) {
-    this.setState({assets});
+  onGetAssets(assets) {
+    this.setState({
+      assets,
+      isLoading: false,
+    });
   }
   
   _renderAssets() {
+    if (this.state.isLoading) {
+      return <ActivityIndicator />;
+    }
+  
   	return this.state.assets.map(asset => this._renderAsset(asset));
   }
   

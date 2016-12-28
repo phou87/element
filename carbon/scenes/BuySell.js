@@ -23,9 +23,16 @@ class BuySell extends Component {
       notifyFriendsSwitch: false,
       shortSwitch: false,
     };
+    
+    this.buy = this.buy.bind(this);
+    this.onBuyCallback = this.onBuyCallback.bind(this);
+    this.onSellCallback = this.onSellCallback.bind(this);
+    this.sell = this.sell.bind(this);
+    this.setCommentText = this.setCommentText.bind(this);
+    this.setCusipText = this.setCusipText.bind(this);
   }
   
-  _buy() {
+  buy() {
     if (!this._checkInputs()) {
       return;
     }
@@ -35,11 +42,11 @@ class BuySell extends Component {
       1,
       this.state.commentText,
       this.state.shortSwitch,
-      this._onBuyCallback.bind(this),
+      this.onBuyCallback,
     );
   }
   
-  _onBuyCallback(asset, error) {
+  onBuyCallback(asset, error) {
     if (error) {
       Alert.alert(
         'Error',
@@ -47,7 +54,9 @@ class BuySell extends Component {
         [{text: 'OK'}],
       );
     } else {
-      ParseDispatcher.sendPushToFollowers(asset.attributes.cusip, "buy");
+      if (this.state.notifyFriendsSwitch) {
+        ParseDispatcher.sendPushToFollowers(asset.attributes.cusip, "buy");
+      }
       Alert.alert(
         'Stock bought',
         'You successfully bought ' + asset.attributes.cusip + '!',
@@ -56,7 +65,7 @@ class BuySell extends Component {
     }
   }
   
-  _sell() {
+  sell() {
     if (!this._checkInputs()) {
       return;
     }
@@ -66,11 +75,11 @@ class BuySell extends Component {
       1,
       this.state.commentText,
       this.state.shortSwitch,
-      this._onSellCallback.bind(this),
-      );
+      this.onSellCallback,
+    );
   }
   
-  _onSellCallback(asset, error) {
+  onSellCallback(asset, error) {
     if (error) {
       Alert.alert(
         'Error',
@@ -78,7 +87,9 @@ class BuySell extends Component {
         [{text: 'OK'}],
       );
     } else {
-      ParseDispatcher.sendPushToFollowers(asset.attributes.cusip, "sell");
+      if (this.state.notifyFriendsSwitch) {
+        ParseDispatcher.sendPushToFollowers(asset.attributes.cusip, "sell");
+      }
       Alert.alert(
         'Stock sold',
         'You successfully sold ' + asset.attributes.cusip + '!',
@@ -100,6 +111,18 @@ class BuySell extends Component {
     }
     
     return true;
+  }
+  
+  setCommentText(commentText) {
+    this.setState({commentText});
+  }
+  
+  setCusipText(cusipText) {
+    this.setState({cusipText});
+  }
+  
+  setNotifyFriendsSwitch(value) {
+    this.setState({notifyFriendsSwitch: value});
   }
 
 	render() {
@@ -128,14 +151,14 @@ class BuySell extends Component {
             autoCapitalize="characters"
             maxLength={4}
             style={styles.cusip}
-            onChangeText={(cusipText) => this.setState({cusipText})}
+            onChangeText={this.setCusipText}
             value={this.state.cusipText}
           />
         </View>
         <TextInput
           blurOnSubmit={true}
           style={styles.commentBox}
-          onChangeText={(commentText) => this.setState({commentText})}
+          onChangeText={this.setCommentText}
           value={this.state.commentText}
           multiline={true}
           numberOfLines={4}
@@ -144,7 +167,7 @@ class BuySell extends Component {
         />
         <View style={styles.notifyFriendsRow}>
           <Switch
-            onValueChange={(value) => this.setState({notifyFriendsSwitch: value})}
+            onValueChange={this.setNotifyFriendsSwitch}
             value={this.state.notifyFriendsSwitch}
           />
         	<Text style={styles.notifyFriendsText}>
@@ -152,8 +175,8 @@ class BuySell extends Component {
           </Text>
         </View>
         <View style={styles.actionRow}>
-        	<Button onClick={() => this._buy()}>Buy</Button>
-          <Button onClick={() => this._sell()}>Sell</Button>
+        	<Button onClick={this.buy}>Buy</Button>
+          <Button onClick={this.sell}>Sell</Button>
         </View>
       </View>
     );

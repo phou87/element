@@ -62,20 +62,13 @@ class FindMoreScene extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
+      isLoading: true,
     };
     
     this.onAddFriendCallback = this.onAddFriendCallback.bind(this);
-    this.refreshFriends = this.refreshFriends.bind(this);
   }
 
   async componentWillMount() {
-    this.setState({
-      isLoading: true,
-    }, this.refreshFriends);
-  }
-  
-  async refreshFriends() {
     await this.props.refreshFriends();
     this.setState({
       isLoading: false,

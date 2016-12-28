@@ -119,7 +119,6 @@ const ParseDispatcher = {
   },
   
   getAllAssets(user, callback) {
-    console.debug('getting assets', user);
     let query = new Parse.Query(Asset);
     query.equalTo("owner", user);
     query.find({

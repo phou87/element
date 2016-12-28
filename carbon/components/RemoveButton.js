@@ -8,7 +8,7 @@ import {
 class RemoveButton extends Component {
   render() {
     return (
-      <TouchableOpacity style={styles.button} onPress={() => this.props.onClick()}>
+      <TouchableOpacity style={styles.button} onPress={this.props.onClick}>
       	<Text style={[styles.cross, this.props.crossStyle]}>
         	X
         </Text>

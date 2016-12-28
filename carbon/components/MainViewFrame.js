@@ -25,7 +25,7 @@ class MainViewFrame extends Component {
         </View>
         <BottomNav
           sceneIDSelected={this.props.scene}
-          onSwitchNav={(id) => this.props.onSwitchNav(id)}
+          onSwitchNav={this.props.onSwitchNav}
         />
       </View>
     );
