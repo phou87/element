@@ -14,9 +14,7 @@ class Login extends Component {
           permissions={["user_friends"]}
           onLogin={this.props.onLogin}
           onLoginFound={this.props.onLogin}
-          onLogoutFinished={() => alert("User logged out")}
-          onError={data => console.debug('Error: ', data)}
-          onPermissionsMissing={(x) => console.debug('Error: ', x)}/>
+        />
       </View>
     );
   }

@@ -30,6 +30,7 @@ class BuySell extends Component {
     this.sell = this.sell.bind(this);
     this.setCommentText = this.setCommentText.bind(this);
     this.setCusipText = this.setCusipText.bind(this);
+    this.setNotifyFriendsSwitch = this.setNotifyFriendsSwitch.bind(this);
   }
   
   buy() {
@@ -69,17 +70,24 @@ class BuySell extends Component {
     if (!this._checkInputs()) {
       return;
     }
-    ParseDispatcher.sellAsset(
+    ParseDispatcher.removeAsset(
       this.props.loggedInUser,
       this.state.cusipText,
-      1,
-      this.state.commentText,
-      this.state.shortSwitch,
+      false,
       this.onSellCallback,
     );
   }
   
   onSellCallback(asset, error) {
+    if (!asset) {
+      Alert.alert(
+        'Error',
+        'You do not own this security.',
+        [{text: 'OK'}],
+      );
+      return;
+    }
+  
     if (error) {
       Alert.alert(
         'Error',

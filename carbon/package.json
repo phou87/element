@@ -6,9 +6,10 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "native-base": "0.5.19",
     "parse-react": "^0.5.2",
-    "react": "15.3.2",
-    "react-native": "0.33.0",
+    "react": "15.4.0",
+    "react-native": "^0.40.0",
     "react-native-device-info": "^0.9.7",
     "react-native-facebook-login": "^1.4.0"
   }

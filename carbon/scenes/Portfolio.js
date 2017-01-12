@@ -21,6 +21,7 @@ class Portfolio extends Component {
     };
     
     this.onGetAssets = this.onGetAssets.bind(this);
+    this.onRemoveAssetCallback = this.onRemoveAssetCallback.bind(this);
   }
 
   componentWillMount() {
@@ -104,11 +105,11 @@ class Portfolio extends Component {
   }
   
   _onRemoveAsset(cusip, isShort) {
-    ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this._onRemoveAssetCallback.bind(this));
+    ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
   }
   
-  _onRemoveAssetCallback(assetID) {
-  	let index = this.state.assets.findIndex(asset => asset.id === assetID);
+  onRemoveAssetCallback(asset) {
+  	let index = this.state.assets.findIndex(currentAsset => currentAsset.id === asset.id);
     this.state.assets[index].removed = true;
     this.forceUpdate();
   }

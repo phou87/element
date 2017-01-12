@@ -19,12 +19,8 @@ const ParseDispatcher = {
         switch (error.code) {
           case Parse.Error.INVALID_SESSION_TOKEN:
             Parse.User.logOut().then(
-              success => {
-                callback();
-              },
-              failure => {
-                callback();
-              },
+              callback,
+              callback,
             );
             break;
           default:
@@ -62,15 +58,6 @@ const ParseDispatcher = {
     });
   },
   
-  getFriendships(user, callback) {
-    let relation = user.relation("friendships");
-    relation.query().find({
-      success: list => {
-        callback(list);
-      },
-    });
-  },
-  
   getAsset(user, cusip, isShort, callback) {
     let query = new Parse.Query(Asset);
     query.equalTo("cusip", cusip);
@@ -85,7 +72,7 @@ const ParseDispatcher = {
         }
       },
       error: error => {
-        callback(null);
+        callback(null, error);
       },
     });
   },
@@ -95,10 +82,11 @@ const ParseDispatcher = {
       if (!asset) {
         asset = new Asset(cusip, quantity, user, comment, isShort);
       } else {
-        asset.set("quantity", asset.get("quantity") + quantity);
+        asset.set("comment", comment);
+        // asset.set("quantity", asset.get("quantity") + quantity);
       }
       asset.save(null, {
-        success: asset => callback(asset),
+        success: callback,
         error: (asset, error) => callback(asset, error),
       });
     });
@@ -112,7 +100,7 @@ const ParseDispatcher = {
         asset.set("quantity", asset.get("quantity") - quantity);
       }
       asset.save(null, {
-        success: asset => callback(asset),
+        success: callback,
         error: (asset, error) => callback(asset, error),
       });
     });
@@ -122,23 +110,25 @@ const ParseDispatcher = {
     let query = new Parse.Query(Asset);
     query.equalTo("owner", user);
     query.find({
-      success: results => {
-        console.debug('assets got', results);
-        callback(results);
-      },
+      success: callback,
       error: error => console.debug(error) && callback([]),
     });
   },
   
   removeAsset(user, cusip, isShort, callback) {
-    ParseDispatcher.getAsset(user, cusip, isShort, asset => {
+    ParseDispatcher.getAsset(user, cusip, isShort, (asset, error) => {
+      if (error) {
+        callback(null, error);
+      }
+    
       if (!asset) {
+        callback();
         return;
       }
       
       let id = asset.id;
       asset.destroy();
-      callback(id);
+      callback(asset);
     });
   },
   
