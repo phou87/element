@@ -27,7 +27,7 @@ import {SCENES} from './common/constants'
 import FacebookDispatcher from './dispatchers/FacebookDispatcher'
 import ParseDispatcher from './dispatchers/ParseDispatcher'
 
-class carbon extends Component {
+export default class carbon extends Component {
   state: {
     deviceToken: string,
   	loggedInUser: object,
@@ -40,6 +40,7 @@ class carbon extends Component {
 
   constructor(props) {
     super(props);
+    console.debug('hi');
     this.state = {
       existingFriends: [],
       potentialFriends: [],
