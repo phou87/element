@@ -19,6 +19,7 @@ class LoginScreen extends Component {
   }
 
   _onLogin(results) {
+    console.debug('oh snap');
     if (this.state.isLoading) {
       return;
     }

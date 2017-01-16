@@ -9,6 +9,7 @@ import {
 
 import React, { Component } from 'react';
 import {SCENES} from '../common/constants'
+import {Button} from 'native-base';
 
 pixelRatio = PixelRatio.get();
 
@@ -21,6 +22,7 @@ class BottomNav extends Component {
 
   _renderNormalItem(sceneIDs, name) {
     let selected = sceneIDs.indexOf(this.props.sceneIDSelected) !== -1;
+    /*
     let style = selected
       ? styles.itemContainerSelected
       : styles.itemContainerDeselected;
@@ -30,15 +32,21 @@ class BottomNav extends Component {
     let ItemContainer = selected
       ? View
       : TouchableOpacity;
+    */
+    
+    let style = {
+      backgroundColor: selected ? 'lightgrey' : undefined,
+    };
+    
     return (
-      <ItemContainer
+      <Button
+        disabled={selected}
         key={name}
         style={style}
+        success
         onPress={() => this.props.onSwitchNav(sceneIDs[0])}>
-        <Text style={textStyle}>
           {name}
-        </Text>
-      </ItemContainer>
+      </Button>
     );
   }
 
@@ -84,19 +92,19 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     height: 120,
     justifyContent: 'center',
     padding: 15,
   },
   itemContainerSelected: {
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     borderColor: 'dimgrey',
     borderRadius: 4,
     borderWidth: 1,
   },
   itemContainerDeselected: {
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     borderColor: 'deepskyblue',
     borderRadius: 4,
     borderWidth: 1,

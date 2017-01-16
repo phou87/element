@@ -2,11 +2,12 @@ import {
   ActivityIndicator,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ScrollView,
 } from 'react-native';
+
+import {Button, List, ListItem, Thumbnail, Text} from 'native-base';
 
 import React, { Component } from 'react';
 import TopNavMultiple from '../components/TopNavMultiple'
@@ -21,6 +22,7 @@ class FriendRow extends Component {
     
     this.onRemoveFriend = this.onRemoveFriend.bind(this);
     this.onSwitchPortfolio = this.onSwitchPortfolio.bind(this);
+    this.renderRightRowSection = this.renderRightRowSection.bind(this);
   }
   
   onRemoveFriend() {
@@ -31,7 +33,7 @@ class FriendRow extends Component {
     this.props.onSwitchPortfolio(this.props.friend);
   }
 
-  _renderRightRowSection(friend) {
+  renderRightRowSection(friend) {
   	if (friend.unfriended) {
     	return (
         <Text style={styles.removedText}>
@@ -41,28 +43,18 @@ class FriendRow extends Component {
     }
     
     return (
-      <RemoveButton onClick={this.onRemoveFriend} />
+      <Button onPress={this.onRemoveFriend} style={styles.removeButton} warning>Remove</Button>
     );
   }
 
   render() {
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
     return (
-      <View style={styles.friendRow}>
-        <TouchableOpacity
-          style={styles.friendRowTouchable}
-          onPress={this.onSwitchPortfolio}
-        >
-          <Image
-            style={{width: 50, height: 50}}
-            source={{uri: uri.getURI()}}
-          />
-          <Text style={styles.friendName}>
-            {this.props.friend.name}
-          </Text>
-        </TouchableOpacity>
-        {this._renderRightRowSection(this.props.friend)}
-      </View>
+      <ListItem>
+        <Thumbnail square size={80} source={{uri: uri.getURI()}} />
+        <Text>{this.props.friend.name}</Text>
+        {this.renderRightRowSection(this.props.friend)}
+      </ListItem>
     );
   }
 }
@@ -112,14 +104,6 @@ class FollowingFriendsScene extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TopNavMultiple
-          items={[
-            {id: SCENES.FOLLOWING_FRIENDS, name: 'Following'},
-            {id: SCENES.FIND_FRIENDS, name: 'Find More'},
-          ]}
-          selected={SCENES.FOLLOWING_FRIENDS}
-          onSwitchNav={(id) => this.props.onSwitchNav(id)}
-        />
         {this._renderFriends()}
       </View>
     );
@@ -131,7 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    backgroundColor: '#575757',
+    backgroundColor: 'white',
   },
   friendRow: {
     alignItems: 'center',
@@ -151,6 +135,11 @@ const styles = StyleSheet.create({
   removedText: {
     color: 'white',
   },
+  removeButton: {
+    marginTop: 20,
+  },
 });
 
-module.exports = FollowingFriendsScene;
+export {
+  FollowingFriendsScene,
+};

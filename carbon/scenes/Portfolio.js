@@ -1,12 +1,13 @@
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 
 import React, { Component } from 'react';
+import {Button, Card, CardItem, Icon, Text} from 'native-base';
+import {Container, Content} from 'native-base';
 
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import RemoveButton from '../components/RemoveButton'
@@ -45,29 +46,36 @@ class Portfolio extends Component {
   
   _renderAsset(asset) {
     let main = (
-      <TouchableOpacity key={asset.id} style={styles.assetRow} onPress={() => this._onClickRow(asset)}>
-        <Text style={styles.assetText}>
-      		{asset.attributes.cusip + (asset.attributes.isShort ? ' (Short)' : '')}
-        </Text>
-        {this._renderRightRowSection(asset)}
-      </TouchableOpacity>
+      <View style={styles.assetRow}>
+        <Card>
+          <CardItem>
+            <Text>{asset.attributes.cusip + (asset.attributes.isShort ? ' (Short)' : '')}</Text>
+            <Text note>{asset.attributes.updatedAt.toDateString()}</Text>
+          </CardItem>
+
+          <CardItem cardBody>
+            <TouchableOpacity key={asset.id} onPress={() => this._onClickRow(asset)}>
+            <Text>
+              {asset.attributes.comment ? asset.attributes.comment : '(no comment saved)'}
+            </Text>
+            </TouchableOpacity>
+          </CardItem>
+
+          <CardItem header>                        
+            {this._renderRightRowSection(asset)}
+          </CardItem>
+        </Card>
+      </View>
     );
     
     if (this.state.expandedAssets.indexOf(asset.id) === -1 ) {
       return main;
     }
     
+
     return (
       <View style={styles.assetWrapper} key={asset.id}>
         {main}
-        <View style={styles.commentBox}>
-          <Text>
-            {asset.attributes.comment ? asset.attributes.comment : '(no comment saved)'}
-          </Text>
-        </View>
-        <Text style={styles.updatedAtText}>
-          {'Updated: ' + asset.attributes.updatedAt.toDateString()}
-        </Text>
       </View>
     );
   }
@@ -91,10 +99,24 @@ class Portfolio extends Component {
 		}
     
     return (
-      <RemoveButton
-        crossStyle={crossStyle}
-        onClick={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
-      />
+      <View style={styles.footerButtons}>
+        <Button
+          info
+          onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
+          rounded
+          style={styles.footerEditButton}
+        >
+          <Icon name='ios-color-wand' />
+        </Button>
+        <Button
+          onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
+          rounded
+          style={styles.footerCloseButton}
+          warning
+        >
+          <Icon name='ios-close' />
+        </Button>
+      </View>
     );
   }
   
@@ -119,9 +141,6 @@ class Portfolio extends Component {
   
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>{title}</Text>
-        </View>
         {this._renderAssets()}
       </View>
     );
@@ -133,7 +152,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    backgroundColor: '#575757',
   },
   header: {
     margin: 10,
@@ -148,7 +166,8 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 10,
+    marginHorizontal: 10,
+    marginVertical: 2,
   },
   assetText: {
     color: 'white',
@@ -160,15 +179,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#04A0FD',
   },
   commentBox: {
-    backgroundColor: 'white',
     height: 50,
     padding: 10,
     margin: 10,
   },
   updatedAtText: {
-    color: 'white',
-    paddingBottom: 10,
-    paddingHorizontal: 10,
+  },
+  footerButtons: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  footerEditButton: {
+    minWidth: 21,
+  },
+  footerCloseButton: {
+    minWidth: 17,
   },
 });
 

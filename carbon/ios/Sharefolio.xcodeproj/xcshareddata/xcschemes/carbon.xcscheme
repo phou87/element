@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "carbon.app"
-               BlueprintName = "carbon"
-               ReferencedContainer = "container:carbon.xcodeproj">
+               BuildableName = "Sharefolio.app"
+               BlueprintName = "Sharefolio"
+               ReferencedContainer = "container:Sharefolio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "carbonTests.xctest"
-               BlueprintName = "carbonTests"
-               ReferencedContainer = "container:carbon.xcodeproj">
+               BuildableName = "SharefolioTests.xctest"
+               BlueprintName = "SharefolioTests"
+               ReferencedContainer = "container:Sharefolio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "carbonTests.xctest"
-               BlueprintName = "carbonTests"
-               ReferencedContainer = "container:carbon.xcodeproj">
+               BuildableName = "SharefolioTests.xctest"
+               BlueprintName = "SharefolioTests"
+               ReferencedContainer = "container:Sharefolio.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "carbon.app"
-            BlueprintName = "carbon"
-            ReferencedContainer = "container:carbon.xcodeproj">
+            BuildableName = "Sharefolio.app"
+            BlueprintName = "Sharefolio"
+            ReferencedContainer = "container:Sharefolio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,11 +94,18 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "carbon.app"
-            BlueprintName = "carbon"
-            ReferencedContainer = "container:carbon.xcodeproj">
+            BuildableName = "Sharefolio.app"
+            BlueprintName = "Sharefolio"
+            ReferencedContainer = "container:Sharefolio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -113,9 +120,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "carbon.app"
-            BlueprintName = "carbon"
-            ReferencedContainer = "container:carbon.xcodeproj">
+            BuildableName = "Sharefolio.app"
+            BlueprintName = "Sharefolio"
+            ReferencedContainer = "container:Sharefolio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

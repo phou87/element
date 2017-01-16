@@ -102,14 +102,6 @@ class FindMoreScene extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TopNavMultiple
-          items={[
-            {id: SCENES.FOLLOWING_FRIENDS, name: 'Following'},
-            {id: SCENES.FIND_FRIENDS, name: 'Find More'},
-          ]}
-          selected={SCENES.FIND_FRIENDS}
-          onSwitchNav={this.props.onSwitchNav}
-        />
         {this._renderPotentialFriends()}
       </View>
     );
@@ -121,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    backgroundColor: '#575757',
+    backgroundColor: 'white',
   },
   addedText: {
     color: 'white',
@@ -140,4 +132,6 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = FindMoreScene;
+export {
+  FindMoreScene,
+};

@@ -250,4 +250,6 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = BuySell;
+export {
+  BuySell,
+};

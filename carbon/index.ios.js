@@ -1,29 +1,11 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import React, { Component } from 'react';
+import {Alert, AppRegistry, PushNotificationIOS} from 'react-native';
 
 import Parse from 'parse/react-native';
-import React, { Component } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  AppRegistry,
-  PushNotificationIOS,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
 
-import BuySell from './scenes/BuySell'
-import MainViewFrame from './components/MainViewFrame'
-import {LoginScreen} from './scenes/LoginScreen'
-import FindMore from './scenes/FindMore'
-import FollowingFriends from './scenes/FollowingFriends'
-import {Portfolio} from './scenes/Portfolio'
+import {BuySell, FindMore, FollowingFriends, LoginScreen, Portfolio} from './scenes';
 import {SCENES} from './common/constants'
-
+import {MainViewFrame} from './components/MainViewFrame'
 import FacebookDispatcher from './dispatchers/FacebookDispatcher'
 import ParseDispatcher from './dispatchers/ParseDispatcher'
 
@@ -40,7 +22,6 @@ export default class carbon extends Component {
 
   constructor(props) {
     super(props);
-    console.debug('hi');
     this.state = {
       existingFriends: [],
       potentialFriends: [],
@@ -112,7 +93,7 @@ export default class carbon extends Component {
     this.setState({
       name,
     	loggedInUser: user,
-      scene: SCENES.FOLLOWING_FRIENDS,
+      scene: SCENES.PORTFOLIO,
     });
   }
   
@@ -207,26 +188,8 @@ export default class carbon extends Component {
   }
 
   render() {
-    return (
-      <View style={styles.mainContainer}>
-        {this._renderScene()}
-      </View>
-    );
+    return this._renderScene();
   }
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-  },
-  sceneContainer: {
-  	flex: 1,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('carbon', () => carbon);

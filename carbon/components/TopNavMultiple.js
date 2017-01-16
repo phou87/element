@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
+import {Button} from 'native-base';
 
 pixelRatio = PixelRatio.get();
 
@@ -21,15 +22,19 @@ class TopNavMultiple extends Component {
   _renderItems() {
     return this.props.items.map((item, index) => {
       let selected = this.props.selected === item.id;
+      /*
       let style = selected
         ? styles.itemContainerSelected
         : styles.itemContainerDeselected;
       let textStyle = selected
         ? styles.itemTextSelected
         : styles.itemTextDeselected;
+      */
+      /*
       let ItemContainer = selected
         ? View
         : TouchableOpacity;
+      */
         
       let containerStyle = [style];
       if (index === 0) {
@@ -37,16 +42,21 @@ class TopNavMultiple extends Component {
       } else if (index === this.props.items.length - 1) {
       	containerStyle.push(styles.itemContainerLast);
       }
+      
+      let style = {
+        backgroundColor: selected ? 'lightgrey' : undefined,
+        marginLeft: index ? 10 : 0,
+      };
         
       return (
-        <ItemContainer
+        <Button
+          disabled={selected}
           key={item.id}
-          style={containerStyle}
+          style={style}
+          success
           onPress={() => this.props.onSwitchNav(item.id)}>
-          <Text style={textStyle}>
             {item.name}
-          </Text>
-        </ItemContainer>
+        </Button>
       );
     });
   }
@@ -64,7 +74,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#575757',
+    backgroundColor: 'white',
     height: 100,
     justifyContent: 'center',
     padding: 20,
