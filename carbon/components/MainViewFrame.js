@@ -6,6 +6,8 @@ import {Button, Container, Content, Footer, FooterTab, Header, Icon, Title} from
 import {Settings} from '../scenes';
 import {SCENES} from '../common/constants';
 
+import mytheme from '../common/mytheme';
+
 class MainViewFrame extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +39,7 @@ class MainViewFrame extends Component {
     let children = this.state.settingsOpened ? this.renderSettings() : this.props.children;
 
     return (
-      <Container>
+      <Container theme={mytheme}>
         <Header>
           <Button transparent>
             <Icon name='ios-arrow-back' onPress={this.onCloseMenu} />

@@ -10,6 +10,7 @@ import {Container, Content, Spinner} from 'native-base';
 
 import ParseDispatcher from '../dispatchers/ParseDispatcher';
 
+
 class Portfolio extends Component {
   constructor(props) {
     super(props);
