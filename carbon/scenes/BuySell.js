@@ -134,61 +134,6 @@ class BuySell extends Component {
   }
 
 	render() {
-    /*
-    <View style={styles.transactionTypeRow}>
-      <Switch
-        onValueChange={(value) => this.setState({shortSwitch: value})}
-        value={this.state.shortSwitch}
-      />
-      <Text>
-        Short
-      </Text>
-    </View>
-    */
-    /*
-  	return (
-      <View style={styles.container}>
-      	<Text style={styles.header}>
-        	Add Security
-        </Text>
-        <View style={styles.cusipRow}>
-          <Text style={styles.cusipText}>
-            Symbol
-          </Text>
-        	<TextInput
-            autoCapitalize="characters"
-            maxLength={4}
-            style={styles.cusip}
-            onChangeText={this.setCusipText}
-            value={this.state.cusipText}
-          />
-        </View>
-        <TextInput
-          blurOnSubmit={true}
-          style={styles.commentBox}
-          onChangeText={this.setCommentText}
-          value={this.state.commentText}
-          multiline={true}
-          numberOfLines={4}
-          placeholder="Comments (optional)"
-          returnKeyType="done"
-        />
-        <View style={styles.notifyFriendsRow}>
-          <Switch
-            onValueChange={this.setNotifyFriendsSwitch}
-            value={this.state.notifyFriendsSwitch}
-          />
-        	<Text style={styles.notifyFriendsText}>
-            Notify Friends
-          </Text>
-        </View>
-        <View style={styles.actionRow}>
-        	<Button onClick={this.buy}>Buy</Button>
-          <Button onClick={this.sell}>Sell</Button>
-        </View>
-      </View>
-    );
-    */
     return (
       <View style={styles.container}>
       <List>

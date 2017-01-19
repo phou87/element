@@ -1,6 +1,7 @@
 import Parse from 'parse/react-native';
 
 import Asset from '../models/Asset'
+import {LikedAsset} from '../models/LikedAsset';
 import Friendship from '../models/Friendship'
 
 const ParseDispatcher = {
@@ -105,13 +106,40 @@ const ParseDispatcher = {
       });
     });
   },
+
+  likeAsset(user, cusip, likedFrom) {
+    let asset = new LikedAsset(cusip, user, likedFrom);
+    asset.save({
+      success: result => console.log('yay', result),
+      error: (result, error) => console.debug(error),
+    });
+  },
+
+  unlikeAsset(user, cusip) {
+    let query = new Parse.Query(LikedAsset);
+    query.equalTo("owner", user);
+    query.equalTo("cusip", cusip);
+    query.find({
+      success: results => {
+        results.map(result => result.destroy());
+      },
+      error: error => console.debug(error),
+    });
+  },
   
   getAllAssets(user, callback) {
     let query = new Parse.Query(Asset);
     query.equalTo("owner", user);
     query.find({
-      success: callback,
-      error: error => console.debug(error) && callback([]),
+      success: results => {
+        let likedQuery = new Parse.Query(LikedAsset);
+        likedQuery.equalTo("owner", user);
+        likedQuery.find({
+          success: likedResults => callback(results, likedResults),
+          error: error => console.debug(error) && callback(results, []),
+        });
+      },
+      error: error => console.debug(error) && callback([], []),
     });
   },
   

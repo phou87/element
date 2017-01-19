@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {Animated, Dimensions, StatusBar, StyleSheet, View} from 'react-native';
 
 import {Button, Container, Content, Footer, FooterTab, Header, Icon, Title} from 'native-base';
 
@@ -8,50 +8,63 @@ import {SCENES} from '../common/constants';
 
 import mytheme from '../common/mytheme';
 
+const deviceScreen = Dimensions.get('window');
+
 class MainViewFrame extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      settingsOffset: new Animated.Value(deviceScreen.width),
       settingsOpened: false,
     };
     
-    this.onCloseMenu = this.onCloseMenu.bind(this);
-    this.onOpenMenu = this.onOpenMenu.bind(this);
-    this.onSwitchFindFriends = this.props.onSwitchNav.bind(this, SCENES.FIND_FRIENDS);
-    this.onSwitchFriends = this.props.onSwitchNav.bind(this, SCENES.FOLLOWING_FRIENDS);
-    this.onSwitchPortfolio = this.props.onSwitchNav.bind(this, SCENES.PORTFOLIO);
-    this.onSwitchBuySell = this.props.onSwitchNav.bind(this, SCENES.BUY_SELL);
+    this.onToggleMenu = this.onToggleMenu.bind(this);
+    this.onSwitchFindFriends = this.onSwitchNav.bind(this, SCENES.FIND_FRIENDS);
+    this.onSwitchFriends = this.onSwitchNav.bind(this, SCENES.FOLLOWING_FRIENDS);
+    this.onSwitchPortfolio = this.onSwitchNav.bind(this, SCENES.PORTFOLIO);
+    this.onSwitchBuySell = this.onSwitchNav.bind(this, SCENES.BUY_SELL);
   }
 
-  onCloseMenu() {
-    this.setState({settingsOpened: false});
+  onToggleMenu() {
+    Animated.spring(this.state.settingsOffset, {
+      toValue: this.state.settingsOpened ? deviceScreen.width : 0,
+      friction: 7,
+    }).start();
+    this.setState({settingsOpened: !this.state.settingsOpened});
   }
   
-  onOpenMenu() {
-    this.setState({settingsOpened: true});
+  onSwitchNav(scene) {
+    this.setState({settingsOpened: false});
+    this.props.onSwitchNav(scene);
   }
   
   renderSettings() {
-    return <Settings />;
+    let transformStyle = {
+      transform: [
+        {translateX: this.state.settingsOffset},
+      ],
+    };
+  
+    return (
+      <Animated.View style={[styles.settingsContainer, transformStyle]}>
+        <Settings />
+      </Animated.View>
+    );
   }
 
   render() {
-    let children = this.state.settingsOpened ? this.renderSettings() : this.props.children;
-
     return (
       <Container theme={mytheme}>
-        <Header>
-          <Button transparent>
-            <Icon name='ios-arrow-back' onPress={this.onCloseMenu} />
-          </Button>
+        <Header iconRight>
           <Title>{this.props.title}</Title>
-          <Button onPress={this.onOpenMenu} transparent>
+          <Button onPress={this.onToggleMenu} transparent>
             <Icon name='ios-menu' />
           </Button>
         </Header>
         <Content style={styles.content}>
           <StatusBar />
-          {children}
+          {this.props.children}
+          {this.renderSettings()}
         </Content>
         <Footer>
           <FooterTab>
@@ -85,6 +98,12 @@ const styles = StyleSheet.create({
   },
   drawerContainer: {
     flex: 1,
+  },
+  settingsContainer: {
+    backgroundColor: '#F8F9F9',
+    height: deviceScreen.height,
+    position: 'absolute',
+    width: deviceScreen.width,
   },
 });
 

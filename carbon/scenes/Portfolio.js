@@ -9,8 +9,7 @@ import {Button, Card, CardItem, Icon, Tabs, Text} from 'native-base';
 import {Container, Content, Spinner} from 'native-base';
 
 import ParseDispatcher from '../dispatchers/ParseDispatcher';
-import mytheme from '../common/mytheme';
-
+import {AssetCard} from '../components/AssetCard';
 
 class Portfolio extends Component {
   constructor(props) {
@@ -19,10 +18,13 @@ class Portfolio extends Component {
       assets: [],
       expandedAssets: [],
       isLoading: true,
+      likedAssets: [],
       testIsLiked: false,
     };
     
+    this.onClickLike = this.onClickLike.bind(this);
     this.onGetAssets = this.onGetAssets.bind(this);
+    this.onRemoveAsset = this.onRemoveAsset.bind(this);
     this.onRemoveAssetCallback = this.onRemoveAssetCallback.bind(this);
   }
 
@@ -30,10 +32,28 @@ class Portfolio extends Component {
     ParseDispatcher.getAllAssets(this.props.loggedInUser, this.onGetAssets);
   }
   
-  onGetAssets(assets) {
+  isAssetLiked(cusip) {
+    return this.state.likedAssets.findIndex(a => a.attributes.cusip === cusip) !== -1;
+  }
+  
+  onClickLike(cusip) {
+    if (this.isAssetLiked(cusip)) {
+      ParseDispatcher.unlikeAsset(this.props.loggedInUser, cusip);
+      let index = this.state.likedAssets.findIndex(asset => asset.attributes.cusip === cusip);
+      this.state.likedAssets.splice(index, 1);
+    } else {
+      ParseDispatcher.likeAsset(this.props.loggedInUser, cusip);
+      this.state.likedAssets.push({attributes: {cusip}});
+    }
+    
+    this.forceUpdate();
+  }
+  
+  onGetAssets(assets, likedAssets) {
     this.setState({
       assets,
       isLoading: false,
+      likedAssets,
     });
   }
   
@@ -52,36 +72,14 @@ class Portfolio extends Component {
   _renderAsset(asset) {
     let main = (
       <View key={asset.id} style={styles.assetRow}>
-        <Card theme={mytheme}>
-          <CardItem>
-            <View style={styles.test}>
-              <View>
-            <Text>{asset.attributes.cusip + (asset.attributes.isShort ? ' (Short)' : '')}</Text>
-            <Text style={{color: '#000000', fontWeight: '100'}}>Updated on {asset.attributes.updatedAt.toDateString()}</Text>
-              </View>
-            <Button transparent
-              info
-              onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
-              rounded
-              style={styles.footerEditButton}
-            >
-              <Icon name='ios-color-wand'style={{fontSize: 35, color: '#5bc0de'}} />
-            </Button>
-            </View>
-          </CardItem>
-
-          <CardItem cardBody>
-            <TouchableOpacity key={asset.id} onPress={() => this._onClickRow(asset)}>
-            <Text>
-              {asset.attributes.comment ? asset.attributes.comment : 'Nothing to say - this stock speaks for itself'}
-            </Text>
-            </TouchableOpacity>
-          </CardItem>
-
-          <CardItem header>                        
-            {this._renderRightRowSection(asset)}
-          </CardItem>
-        </Card>
+        <AssetCard
+          comment={asset.attributes.comment}
+          cusip={asset.attributes.cusip}
+          isLiked={this.isAssetLiked(asset.attributes.cusip)}
+          onClickLike={this.onClickLike}
+          onRemoveAsset={this.onRemoveAsset}
+          updatedAt={asset.attributes.updatedAt.toDateString()}
+        />
       </View>
     );
     
@@ -134,7 +132,7 @@ class Portfolio extends Component {
     });
   }
   
-  _onRemoveAsset(cusip, isShort) {
+  onRemoveAsset(cusip, isShort) {
     ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
   }
   
