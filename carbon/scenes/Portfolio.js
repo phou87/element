@@ -144,7 +144,7 @@ class Portfolio extends Component {
   }
 
   render() {
-    let title = this.props.ownPortfolio ? 'My Portfolio' : this.props.loggedInUser.get("name");
+    let title = this.props.ownPortfolio ? 'Portfolio' : this.props.loggedInUser.get("name");
   
     return (
       <View>
