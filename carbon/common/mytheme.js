@@ -73,7 +73,7 @@ cardDefaultBg:'#E0E0E5',
 
 
 
-checkboxBgColor:'#039BE5',
+checkboxBgColor:'#5bc0de',
 checkboxSize:23,
 checkboxTickColor:'#fff',
 
