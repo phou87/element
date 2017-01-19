@@ -13,6 +13,7 @@ import React, { Component } from 'react';
 import {SCENES} from '../common/constants'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import {FacebookURI} from '../common/FacebookURI';
+import mytheme from '../common/mytheme';
 
 class FriendRow extends Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class FriendRow extends Component {
     }
     
     return (
-      <Button onPress={this.onRemoveFriend} style={styles.removeButton} warning>Remove</Button>
+      <Button  rounded block  onPress={this.onRemoveFriend} style={styles.removeButton} success >Remove</Button>
     );
   }
 
@@ -49,8 +50,9 @@ class FriendRow extends Component {
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
     return (
       <ListItem>
-        <Thumbnail square size={80} source={{uri: uri.getURI()}} />
-        <Text>{this.props.friend.name}</Text>
+        <Thumbnail square size={75} source={{uri: uri.getURI()}} />
+        <Text style={styles.friendName}>{this.props.friend.name}</Text>
+        <Text note>Number of Stocks in Portfolio</Text>
         {this.renderRightRowSection(this.props.friend)}
       </ListItem>
     );
@@ -126,15 +128,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   friendName: {
-    fontSize: 20,
+    fontSize: 15,
+    fontWeight: '800',
     textAlign: 'left',
-    margin: 10,
+    margin: 5,
   },
   removedText: {
     color: 'white',
   },
   removeButton: {
-    marginTop: 20,
+    marginTop: 10,
   },
 });
 

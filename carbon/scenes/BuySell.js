@@ -51,7 +51,7 @@ class BuySell extends Component {
     if (error) {
       Alert.alert(
         'Error',
-        'Something went wrong.  Please try again later.',
+        'Something went wrong.  Please try again.',
         [{text: 'OK'}],
       );
     } else {
@@ -194,23 +194,23 @@ class BuySell extends Component {
       <List>
         <ListItem>
           <InputGroup>
-              <Input placeholder="Symbol" style={{justifyContent: 'flex-start'}} />
+              <Input placeholder="Enter a Stock Symbol" style={{justifyContent: 'flex-start'}} />
           </InputGroup>
         </ListItem>
         <ListItem>
           <InputGroup>
-              <Input multiline={true} numberOfLines={4} placeholder="Enter comments here (optional)" style={styles.commentBox} />
+              <Input multiline={true} numberOfLines={4} placeholder="Tell your friends more this stock!" style={styles.commentBox} />
           </InputGroup>
         </ListItem>
         <ListItem>
           <CheckBox checked={true} />
-          <Text>Notify Friends</Text>
+          <Text>Notify Your Friends</Text>
         </ListItem>
         <ListItem>
             <Button rounded block info>Buy</Button>
         </ListItem>
         <ListItem>
-            <Button rounded block warning> Sell </Button>
+            <Button rounded block success> Sell </Button>
         </ListItem>
       </List>
 

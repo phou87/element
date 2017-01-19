@@ -109,9 +109,9 @@ footerBtnMargin:1,
 
 
 
-tabBarTextColor:_reactNative.Platform.OS==='ios'?'#f0ad4e':'#b3c7f9',
+tabBarTextColor:_reactNative.Platform.OS==='ios'?'#5cb85c':'#b3c7f9',
 tabBarActiveTextColor:_reactNative.Platform.OS==='ios'?'#5bc0de':'#fff',
-tabActiveBgColor:_reactNative.Platform.OS=='ios'?'#cde1f9':undefined,
+tabActiveBgColor:_reactNative.Platform.OS=='ios'?'#F8F9F9':undefined,
 tabActiveBorderRadius:_reactNative.Platform.OS=='ios'?7:undefined,
 tabBarTextSize:_reactNative.Platform.OS=='ios'?12.5:10,
 tabBarActiveTextSize:_reactNative.Platform.OS=='ios'?12.5:11,
