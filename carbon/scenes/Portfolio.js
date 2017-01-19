@@ -73,7 +73,7 @@ class Portfolio extends Component {
           <CardItem cardBody>
             <TouchableOpacity key={asset.id} onPress={() => this._onClickRow(asset)}>
             <Text>
-              {asset.attributes.comment ? asset.attributes.comment : 'No comment'}
+              {asset.attributes.comment ? asset.attributes.comment : 'Nothing to say - this stock speaks for itself'}
             </Text>
             </TouchableOpacity>
           </CardItem>

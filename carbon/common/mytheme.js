@@ -69,7 +69,7 @@ return this.iconFontSize*.6;
 
 
 
-cardDefaultBg:'#E0E0E0',
+cardDefaultBg:'#cee9ce',
 
 
 
