@@ -1,13 +1,12 @@
 import {
-  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 
 import React, { Component } from 'react';
-import {Button, Card, CardItem, Icon, Text} from 'native-base';
-import {Container, Content} from 'native-base';
+import {Button, Card, CardItem, Icon, Tabs, Text} from 'native-base';
+import {Container, Content, Spinner} from 'native-base';
 
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import RemoveButton from '../components/RemoveButton'
@@ -19,6 +18,7 @@ class Portfolio extends Component {
       assets: [],
       expandedAssets: [],
       isLoading: true,
+      testIsLiked: false,
     };
     
     this.onGetAssets = this.onGetAssets.bind(this);
@@ -38,7 +38,11 @@ class Portfolio extends Component {
   
   _renderAssets() {
     if (this.state.isLoading) {
-      return <ActivityIndicator />;
+      return (
+        <View style={{alignItems: 'center', flex: 1, justifyContent: 'center'}}>
+          <Spinner color="green" />
+        </View>
+      );
     }
   
   	return this.state.assets.map(asset => this._renderAsset(asset));
@@ -46,17 +50,29 @@ class Portfolio extends Component {
   
   _renderAsset(asset) {
     let main = (
-      <View style={styles.assetRow}>
+      <View key={asset.id} style={styles.assetRow}>
         <Card>
           <CardItem>
+            <View style={styles.test}>
+              <View>
             <Text>{asset.attributes.cusip + (asset.attributes.isShort ? ' (Short)' : '')}</Text>
-            <Text note>{asset.attributes.updatedAt.toDateString()}</Text>
+            <Text style={{color: '#808080', fontWeight: '100'}}>{asset.attributes.updatedAt.toDateString()}</Text>
+              </View>
+            <Button
+              info
+              onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
+              rounded
+              style={styles.footerEditButton}
+            >
+              <Icon name='ios-color-wand' />
+            </Button>
+            </View>
           </CardItem>
 
           <CardItem cardBody>
             <TouchableOpacity key={asset.id} onPress={() => this._onClickRow(asset)}>
             <Text>
-              {asset.attributes.comment ? asset.attributes.comment : '(no comment saved)'}
+              {asset.attributes.comment ? asset.attributes.comment : 'No comment'}
             </Text>
             </TouchableOpacity>
           </CardItem>
@@ -93,20 +109,11 @@ class Portfolio extends Component {
       );
     }
     
-    let crossStyle = null;
-    if (this.state.expandedAssets.indexOf(asset.id) !== -1 ) {
-      crossStyle = {color: 'white'};
-		}
-    
     return (
       <View style={styles.footerButtons}>
-        <Button
-          info
-          onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
-          rounded
-          style={styles.footerEditButton}
-        >
-          <Icon name='ios-color-wand' />
+        <Button onPress={() => this.setState({testIsLiked: !this.state.testIsLiked})} transparent>
+          {this.state.testIsLiked ? <Icon name='ios-heart' /> : <Icon name='ios-heart-outline' />}
+          12
         </Button>
         <Button
           onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
@@ -140,27 +147,17 @@ class Portfolio extends Component {
     let title = this.props.ownPortfolio ? 'My Portfolio' : this.props.loggedInUser.get("name");
   
     return (
-      <View style={styles.container}>
-        {this._renderAssets()}
+      <View>
+        <Tabs>
+          <Container tabLabel="My Portfolio"><Content>{this._renderAssets()}</Content></Container>
+          <Container tabLabel="Shit I've Liked"><Content><Text>Test</Text></Content></Container>
+        </Tabs>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-  },
-  header: {
-    margin: 10,
-  },
-  headerText: {
-    color: 'white',
-    fontSize: 28,
-    textAlign: 'center',
-  },
   assetRow: {
     alignItems: 'center',
     alignSelf: 'stretch',
@@ -169,21 +166,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 2,
   },
-  assetText: {
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'left',
-    margin: 10,
-  },
   assetWrapper: {
     backgroundColor: '#04A0FD',
-  },
-  commentBox: {
-    height: 50,
-    padding: 10,
-    margin: 10,
-  },
-  updatedAtText: {
   },
   footerButtons: {
     alignItems: 'center',
@@ -196,6 +180,10 @@ const styles = StyleSheet.create({
   },
   footerCloseButton: {
     minWidth: 17,
+  },
+  test: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 

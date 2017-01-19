@@ -59,7 +59,7 @@ class FriendRow extends Component {
   }
 }
 
-class FollowingFriendsScene extends Component {
+class FollowingFriends extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -141,5 +141,5 @@ const styles = StyleSheet.create({
 });
 
 export {
-  FollowingFriendsScene,
+  FollowingFriends,
 };

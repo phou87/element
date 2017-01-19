@@ -93,7 +93,7 @@ export default class carbon extends Component {
     this.setState({
       name,
     	loggedInUser: user,
-      scene: SCENES.PORTFOLIO,
+      scene: SCENES.BUY_SELL,
     });
   }
   
@@ -129,6 +129,21 @@ export default class carbon extends Component {
       potentialFriends,
       existingFriends,
     });
+  }
+  
+  getTitle() {
+    switch (this.state.scene) {
+      case SCENES.FIND_FRIENDS:
+        return "Find Friends";
+      case SCENES.FOLLOWING_FRIENDS:
+        return "Following";
+      case SCENES.PORTFOLIO:
+        return "Portfolio";
+      case SCENES.BUY_SELL:
+        return "Buy/Sell";
+    }
+    
+    return "Sharefolio";
   }
 
   _renderScene() {
@@ -181,6 +196,7 @@ export default class carbon extends Component {
         {...this.state}
         onLogout={this.onLogout}
         onSwitchNav={this.onSwitchNav}
+        title={this.getTitle()}
       >
         {child}
       </MainViewFrame>

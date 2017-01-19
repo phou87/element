@@ -58,7 +58,7 @@ class PotentialFriendRow extends Component {
   }
 }
 
-class FindMoreScene extends Component {
+class FindMore extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -133,5 +133,5 @@ const styles = StyleSheet.create({
 });
 
 export {
-  FindMoreScene,
+  FindMore,
 };

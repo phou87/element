@@ -3,7 +3,6 @@ import {
   Image,
   StyleSheet,
   Switch,
-  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -11,7 +10,8 @@ import {
 import React, { Component } from 'react';
 import Parse from 'parse/react-native';
 
-import Button from '../components/Button'
+import {Button, CheckBox, Icon, Input, InputGroup, List, ListItem, Text, Textarea} from 'native-base';
+
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 
 class BuySell extends Component {
@@ -145,7 +145,7 @@ class BuySell extends Component {
       </Text>
     </View>
     */
-  
+    /*
   	return (
       <View style={styles.container}>
       	<Text style={styles.header}>
@@ -188,23 +188,41 @@ class BuySell extends Component {
         </View>
       </View>
     );
+    */
+    return (
+      <View style={styles.container}>
+      <List>
+        <ListItem>
+          <InputGroup>
+              <Input placeholder="Symbol" style={{justifyContent: 'flex-start'}} />
+          </InputGroup>
+        </ListItem>
+        <ListItem>
+          <InputGroup>
+              <Input multiline={true} numberOfLines={4} placeholder="Enter comments here (optional)" style={styles.commentBox} />
+          </InputGroup>
+        </ListItem>
+        <ListItem>
+          <CheckBox checked={true} />
+          <Text>Notify Friends</Text>
+        </ListItem>
+      </List>
+      <Button block info>Buy</Button>
+      <Button block info>Sell</Button>
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   commentBox: {
-    backgroundColor: 'white',
-  	flex: 1,
-    fontSize: 20,
-    height: 150,
-    padding: 10,
-    margin: 20,
+    height: 100,
   },
   container: {
   	flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#04A0FD',
-    padding: 20,
+    height: 300,
+    justifyContent: 'space-around',
   },
   header: {
   	alignSelf: 'center',
