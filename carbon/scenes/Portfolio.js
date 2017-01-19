@@ -8,8 +8,7 @@ import React, { Component } from 'react';
 import {Button, Card, CardItem, Icon, Tabs, Text} from 'native-base';
 import {Container, Content, Spinner} from 'native-base';
 
-import ParseDispatcher from '../dispatchers/ParseDispatcher'
-import RemoveButton from '../components/RemoveButton'
+import ParseDispatcher from '../dispatchers/ParseDispatcher';
 
 class Portfolio extends Component {
   constructor(props) {

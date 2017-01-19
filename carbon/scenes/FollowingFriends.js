@@ -10,10 +10,8 @@ import {
 import {Button, List, ListItem, Thumbnail, Text} from 'native-base';
 
 import React, { Component } from 'react';
-import TopNavMultiple from '../components/TopNavMultiple'
 import {SCENES} from '../common/constants'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
-import RemoveButton from '../components/RemoveButton'
 import {FacebookURI} from '../common/FacebookURI';
 
 class FriendRow extends Component {

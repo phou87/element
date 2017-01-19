@@ -8,10 +8,8 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
-import AddButton from '../components/AddButton'
 import FacebookDispatcher from '../dispatchers/FacebookDispatcher'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
-import TopNavMultiple from '../components/TopNavMultiple'
 import {SCENES} from '../common/constants'
 import {FacebookURI} from '../common/FacebookURI';
 
@@ -36,7 +34,7 @@ class PotentialFriendRow extends Component {
     }
     
     return (
-      <AddButton onClick={this.onAddFriend} />
+      <Text onClick={this.onAddFriend}>Add</Text>
     );
   }
 

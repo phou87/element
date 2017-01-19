@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 
 import {Button, Container, Content, Footer, FooterTab, Header, Icon, Title} from 'native-base';
-import Drawer from 'react-native-drawer'
 
 import {Settings} from '../scenes';
 import {SCENES} from '../common/constants';
@@ -36,7 +35,7 @@ class MainViewFrame extends Component {
 
   render() {
     let children = this.state.settingsOpened ? this.renderSettings() : this.props.children;
-  
+
     return (
       <Container>
         <Header>
@@ -54,11 +53,11 @@ class MainViewFrame extends Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Button active={this.props.scene === SCENES.FIND_MORE} onPress={this.onSwitchFindFriends}>
+            <Button active={this.props.scene === SCENES.FIND_FRIENDS} onPress={this.onSwitchFindFriends}>
               Find More
               <Icon name='ios-person-add' />
             </Button>
-            <Button active={this.props.scene === SCENES.FOLLOWING} onPress={this.onSwitchFriends}>
+            <Button active={this.props.scene === SCENES.FOLLOWING_FRIENDS} onPress={this.onSwitchFriends}>
               Following
               <Icon name='ios-body' />
             </Button>
