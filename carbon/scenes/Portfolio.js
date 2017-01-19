@@ -122,7 +122,7 @@ class Portfolio extends Component {
           style={styles.footerCloseButton}
           warning
         >
-          <Icon name='ios-close-circle' style={{fontSize: 35, color: '#f0ad4e'}} />
+          <Icon name='ios-close-circle' style={{fontSize: 30, color: '#f0ad4e'}} />
         </Button>
       </View>
     );
