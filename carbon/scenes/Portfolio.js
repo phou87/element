@@ -9,6 +9,7 @@ import {Button, Card, CardItem, Icon, Tabs, Text} from 'native-base';
 import {Container, Content, Spinner} from 'native-base';
 
 import ParseDispatcher from '../dispatchers/ParseDispatcher';
+import mytheme from '../common/mytheme';
 
 
 class Portfolio extends Component {
@@ -51,20 +52,20 @@ class Portfolio extends Component {
   _renderAsset(asset) {
     let main = (
       <View key={asset.id} style={styles.assetRow}>
-        <Card>
+        <Card theme={mytheme}>
           <CardItem>
             <View style={styles.test}>
               <View>
             <Text>{asset.attributes.cusip + (asset.attributes.isShort ? ' (Short)' : '')}</Text>
-            <Text style={{color: '#808080', fontWeight: '100'}}>{asset.attributes.updatedAt.toDateString()}</Text>
+            <Text style={{color: '#000000', fontWeight: '100'}}>Updated on {asset.attributes.updatedAt.toDateString()}</Text>
               </View>
-            <Button
+            <Button transparent
               info
               onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
               rounded
               style={styles.footerEditButton}
             >
-              <Icon name='ios-color-wand' />
+              <Icon name='ios-color-wand'style={{fontSize: 35, color: '#5bc0de'}} />
             </Button>
             </View>
           </CardItem>
@@ -112,16 +113,16 @@ class Portfolio extends Component {
     return (
       <View style={styles.footerButtons}>
         <Button onPress={() => this.setState({testIsLiked: !this.state.testIsLiked})} transparent>
-          {this.state.testIsLiked ? <Icon name='ios-heart' /> : <Icon name='ios-heart-outline' />}
+          {this.state.testIsLiked ? <Icon name='ios-heart' style={{color: '#d9534f'}}/> : <Icon name='ios-heart-outline' style={{color: '#d9534f'}}/>}
           12
         </Button>
-        <Button
+        <Button transparent
           onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
           rounded
           style={styles.footerCloseButton}
           warning
         >
-          <Icon name='ios-close' />
+          <Icon name='ios-close-circle' style={{fontSize: 35, color: '#f0ad4e'}} />
         </Button>
       </View>
     );
@@ -174,12 +175,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  footerEditButton: {
-    minWidth: 21,
-  },
-  footerCloseButton: {
-    minWidth: 17,
   },
   test: {
     flexDirection: 'row',

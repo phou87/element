@@ -206,9 +206,14 @@ class BuySell extends Component {
           <CheckBox checked={true} />
           <Text>Notify Friends</Text>
         </ListItem>
+        <ListItem>
+            <Button rounded block info>Buy</Button>
+        </ListItem>
+        <ListItem>
+            <Button rounded block warning> Sell </Button>
+        </ListItem>
       </List>
-      <Button block info>Buy</Button>
-      <Button block info>Sell</Button>
+
       </View>
     );
   }
@@ -271,3 +276,13 @@ const styles = StyleSheet.create({
 export {
   BuySell,
 };
+
+
+
+/*
+brandPrimary : '#428bca',
+10	    brandInfo: '#5bc0de',
+11	    brandSuccess: '#5cb85c',
+12	    brandDanger: '#d9534f',
+13	    brandWarning: '#f0ad4e',
+*/

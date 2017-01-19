@@ -69,7 +69,7 @@ return this.iconFontSize*.6;
 
 
 
-cardDefaultBg:'#fff',
+cardDefaultBg:'#E0E0E0',
 
 
 
@@ -109,8 +109,8 @@ footerBtnMargin:1,
 
 
 
-tabBarTextColor:_reactNative.Platform.OS==='ios'?'#800000':'#b3c7f9',
-tabBarActiveTextColor:_reactNative.Platform.OS==='ios'?'#007aff':'#fff',
+tabBarTextColor:_reactNative.Platform.OS==='ios'?'#f0ad4e':'#b3c7f9',
+tabBarActiveTextColor:_reactNative.Platform.OS==='ios'?'#5bc0de':'#fff',
 tabActiveBgColor:_reactNative.Platform.OS=='ios'?'#cde1f9':undefined,
 tabActiveBorderRadius:_reactNative.Platform.OS=='ios'?7:undefined,
 tabBarTextSize:_reactNative.Platform.OS=='ios'?12.5:10,
@@ -175,10 +175,10 @@ lineHeight:_reactNative.Platform.OS==='ios'?20:24,
 
 
 
-listBorderColor:'#ddd',
+listBorderColor:'#FFF',
 listDividerBg:'#ddd',
 listItemHeight:45,
-listItemPadding:_reactNative.Platform.OS==='ios'?12:16,
+listItemPadding:_reactNative.Platform.OS==='ios'?15:16,
 listNoteColor:'#808080',
 listNoteSize:13,
 listMarginLeft:15,

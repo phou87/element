@@ -9,6 +9,7 @@ import {
 
 import Login from '../components/Login'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
+import {Button, Icon} from 'native-base';
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -53,6 +54,7 @@ class LoginScreen extends Component {
         <Text style={styles.welcome}>
           Sharefolio
         </Text>
+        <Icon name='ios-trending-up' style={{fontSize: 100, color: 'green'}}/>
         <Text style={styles.description}>
           Portfolio Sharing Made Easy
         </Text>
