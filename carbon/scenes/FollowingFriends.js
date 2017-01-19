@@ -42,7 +42,7 @@ class FriendRow extends Component {
     }
     
     return (
-      <Button  rounded block  onPress={this.onRemoveFriend} style={styles.removeButton} success >Remove</Button>
+      <Button rounded block onPress={this.onRemoveFriend} style={styles.removeButton} success>Remove</Button>
     );
   }
 

@@ -2,12 +2,13 @@ import {
   ActivityIndicator,
   Image,
   StyleSheet,
-  Text,
   View,
   ScrollView,
 } from 'react-native';
 
 import React, { Component } from 'react';
+import {Button, List, ListItem, Thumbnail, Text} from 'native-base';
+
 import FacebookDispatcher from '../dispatchers/FacebookDispatcher'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import {SCENES} from '../common/constants'
@@ -34,24 +35,18 @@ class PotentialFriendRow extends Component {
     }
     
     return (
-      <Text onClick={this.onAddFriend}>Add</Text>
+      <Button rounded block onPress={this.onAddFriend} style={styles.addButton} success>Add</Button>
     );
   }
 
   render() {
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
-  
     return (
-      <View style={styles.friendRow}>
-        <Image
-          style={{width: 50, height: 50}}
-          source={{uri: uri.getURI()}}
-        />
-        <Text style={styles.friendName}>
-          {this.props.friend.name}
-        </Text>
+      <ListItem>
+        <Thumbnail square size={75} source={{uri: uri.getURI()}} />
+        <Text style={styles.friendName}>{this.props.friend.name}</Text>
         {this._renderRightRowSection(this.props.friend)}
-      </View>
+      </ListItem>
     );
   }
 }
@@ -123,10 +118,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   friendName: {
-    color: 'white',
-    fontSize: 20,
+    fontSize: 15,
+    fontWeight: '800',
     textAlign: 'left',
-    margin: 10,
+    margin: 5,
+  },
+  addButton: {
+    marginTop: 10,
   },
 });
 
