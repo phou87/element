@@ -221,7 +221,7 @@ class BuySell extends Component {
 
 const styles = StyleSheet.create({
   commentBox: {
-    height: 100,
+    height: 200,
     fontWeight: '500',
     fontSize: 15,
   },
