@@ -51,7 +51,7 @@ class LoginScreen extends Component {
     return (
       <View style={styles.loginContainer}>
         <Text style={styles.welcome}>
-          SHAREFOLIO
+          Sharefolio
         </Text>
         <Text style={styles.description}>
           Portfolio Sharing Made Easy
