@@ -194,7 +194,7 @@ class BuySell extends Component {
       <List>
         <ListItem>
           <InputGroup>
-              <Input placeholder="Enter a Stock Symbol" style={{justifyContent: 'flex-start'}} />
+              <Input placeholder="Enter a Stock Symbol" style={styles.cusipText} />
           </InputGroup>
         </ListItem>
         <ListItem>
@@ -222,6 +222,8 @@ class BuySell extends Component {
 const styles = StyleSheet.create({
   commentBox: {
     height: 100,
+    fontWeight: '500',
+    fontSize: 15,
   },
   container: {
   	flex: 1,
@@ -245,6 +247,9 @@ const styles = StyleSheet.create({
   },
   cusipText: {
     fontSize: 20,
+    fontWeight: '700',
+    justifyContent: 'space-around',
+
   },
   cusipRow: {
     alignItems: 'center',
