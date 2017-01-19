@@ -36,7 +36,7 @@ class AssetCard extends Component {
           onPress={this.onRemoveAsset}
           rounded
           style={styles.closeButton}
-          warning
+          transparent
         >
           <Icon name='ios-close-circle' style={{fontSize: 30, color: '#f0ad4e'}} />
         </Button>

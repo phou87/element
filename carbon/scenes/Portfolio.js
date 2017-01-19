@@ -94,43 +94,6 @@ class Portfolio extends Component {
       </View>
     );
   }
-
-  _renderRightRowSection(asset) {
-  	if (!this.props.ownPortfolio) {
-      return null;
-    }
-  
-  	if (asset.removed) {
-    	return (
-        <Text>
-          Removed!
-        </Text>
-      );
-    }
-    
-    return (
-      <View style={styles.footerButtons}>
-        <Button onPress={() => this.setState({testIsLiked: !this.state.testIsLiked})} transparent>
-          {this.state.testIsLiked ? <Icon name='ios-heart' style={{color: '#d9534f'}}/> : <Icon name='ios-heart-outline' style={{color: '#d9534f'}}/>}
-          12
-        </Button>
-        <Button transparent
-          onPress={() => this._onRemoveAsset(asset.attributes.cusip, asset.attributes.isShort)}
-          rounded
-          style={styles.footerCloseButton}
-          warning
-        >
-          <Icon name='ios-close-circle' style={{fontSize: 30, color: '#f0ad4e'}} />
-        </Button>
-      </View>
-    );
-  }
-  
-  _onClickRow(asset) {
-    this.setState({
-      expandedAssets: [asset.id],
-    });
-  }
   
   onRemoveAsset(cusip, isShort) {
     ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
