@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Alert, AppRegistry, PushNotificationIOS} from 'react-native';
 
 import Parse from 'parse/react-native';
+const {FBLoginManager} = require('react-native-facebook-login');
 
 import {BuySell, FindMore, FollowingFriends, LoginScreen, Portfolio} from './scenes';
 import {SCENES} from './common/constants'
@@ -98,9 +99,11 @@ export default class carbon extends Component {
   }
   
   onLogout() {
-    this.setState({
-      loggedInUser: null,
-      scene: SCENES.LOGIN,
+    FBLoginManager.logout((error, data) => {
+      this.setState({
+        loggedInUser: null,
+        scene: SCENES.LOGIN,
+      });
     });
   }
 
