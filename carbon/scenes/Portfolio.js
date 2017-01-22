@@ -112,7 +112,7 @@ class Portfolio extends Component {
       <View>
         <Tabs>
           <Container tabLabel="My Portfolio"><Content>{this._renderAssets()}</Content></Container>
-          <Container tabLabel="Shit I've Liked"><Content><Text>Test</Text></Content></Container>
+          <Container tabLabel="Stocks I've Liked"><Content><Text>Test</Text></Content></Container>
         </Tabs>
       </View>
     );

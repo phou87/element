@@ -38,7 +38,7 @@ class AssetCard extends Component {
           style={styles.closeButton}
           transparent
         >
-          <Icon name='ios-close-circle' style={{fontSize: 30, color: '#f0ad4e'}} />
+          <Icon name='ios-close-circle' style={{fontSize: 30, color: '#5cb85c'}} />
         </Button>
       </View>
     );
@@ -50,7 +50,7 @@ class AssetCard extends Component {
         <CardItem>
           <View style={styles.cardHeader}>
             <View>
-              <Text>{this.props.cusip}</Text>
+              <Text style={styles.symbolText}>{this.props.cusip}</Text>
               <Text style={styles.updatedAtText}>Updated on {this.props.updatedAt}</Text>
             </View>
             <Button
@@ -66,11 +66,10 @@ class AssetCard extends Component {
         </CardItem>
 
         <CardItem cardBody>
-          <Text>
+          <Text style={styles.commentText}>
             {this.props.comment ? this.props.comment : 'Nothing to say - this stock speaks for itself'}
           </Text>
         </CardItem>
-
         <CardItem header>                        
           {this.renderFooter()}
         </CardItem>
@@ -97,8 +96,17 @@ const styles = StyleSheet.create({
     minWidth: 21,
   },
   updatedAtText: {
+    color: '#ffffff',
+    fontWeight: '600',
+  },
+  symbolText: {
     color: '#000000',
-    fontWeight: '100',
+    fontWeight: '600',
+  },
+  commentText: {
+    color: '#000000',
+    fontWeight: '300',
+
   },
 });
 
