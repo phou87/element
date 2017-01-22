@@ -14,6 +14,7 @@ class MainViewFrame extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      settingsHidden: false,
       settingsOffset: new Animated.Value(deviceScreen.width),
       settingsOpened: false,
     };
@@ -30,15 +31,23 @@ class MainViewFrame extends Component {
       toValue: this.state.settingsOpened ? deviceScreen.width : 0,
       friction: 7,
     }).start();
-    this.setState({settingsOpened: !this.state.settingsOpened});
+    this.setState({settingsHidden: false, settingsOpened: !this.state.settingsOpened});
   }
   
   onSwitchNav(scene) {
-    this.setState({settingsOpened: false});
+    this.setState({
+      settingsHidden: true,
+      settingsOffset: new Animated.Value(deviceScreen.width),
+      settingsOpened: false,
+    });
     this.props.onSwitchNav(scene);
   }
   
   renderSettings() {
+    if (this.state.settingsHidden) {
+      return null;
+    }
+  
     let transformStyle = {
       transform: [
         {translateX: this.state.settingsOffset},

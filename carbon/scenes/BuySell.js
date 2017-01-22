@@ -20,7 +20,7 @@ class BuySell extends Component {
     this.state = {
       commentText: '',
       cusipText: '',
-      notifyFriendsSwitch: false,
+      notifyFriendsSwitch: true,
       shortSwitch: false,
     };
     
@@ -129,8 +129,8 @@ class BuySell extends Component {
     this.setState({cusipText});
   }
   
-  setNotifyFriendsSwitch(value) {
-    this.setState({notifyFriendsSwitch: value});
+  setNotifyFriendsSwitch() {
+    this.setState({notifyFriendsSwitch: !this.state.setNotifyFriendsSwitch});
   }
 
 	render() {
@@ -144,18 +144,18 @@ class BuySell extends Component {
         </ListItem>
         <ListItem>
           <InputGroup>
-              <Input multiline={true} numberOfLines={4} placeholder="Tell your friends more this stock!" style={styles.commentBox} />
+              <Input multiline={true} numberOfLines={4} placeholder="Tell your friends more about this stock!" style={styles.commentBox} />
           </InputGroup>
         </ListItem>
         <ListItem>
-          <CheckBox checked={true} />
+          <CheckBox checked={this.state.notifyFriendsSwitch} onPress={this.setNotifyFriendsSwitch} />
           <Text>Notify Your Friends</Text>
         </ListItem>
         <ListItem>
-            <Button rounded block info>Buy</Button>
+            <Button rounded block info onPress={this.buy}>Buy</Button>
         </ListItem>
         <ListItem>
-            <Button rounded block success> Sell </Button>
+            <Button rounded block success onPress={this.sell}> Sell </Button>
         </ListItem>
       </List>
 
