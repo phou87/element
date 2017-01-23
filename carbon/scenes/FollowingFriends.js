@@ -13,7 +13,7 @@ import React, { Component } from 'react';
 import {SCENES} from '../common/constants'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import {FacebookURI} from '../common/FacebookURI';
-import mytheme from '../common/mytheme';
+import mytheme2 from '../common/mytheme2';
 
 class FriendRow extends Component {
   constructor(props) {
@@ -58,8 +58,8 @@ class FriendRow extends Component {
   render() {
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
     return (
-      <ListItem>
-        <Thumbnail square size={75} source={{uri: uri.getURI()}} />
+      <ListItem theme={mytheme2}>
+        <Thumbnail circle size={50} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
         <Text note>Number of Stocks in Portfolio</Text>
         {this.renderRightRowSection(this.props.friend)}

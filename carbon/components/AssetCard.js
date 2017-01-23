@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -42,9 +41,12 @@ class AssetCard extends Component {
   renderCommentSection() {
     if (!this.state.editing) {
       return (
-        <Text style={styles.commentText}>
-          {this.props.comment ? this.props.comment : 'Nothing to say - this stock speaks for itself'}
-        </Text>
+        <View>
+          <Text style={styles.commentTexttitle}>Comment on the Stock:</Text>
+          <Text style={styles.commentText}>
+            {this.props.comment ? this.props.comment : 'Nothing to say - this stock speaks for itself'}
+          </Text>
+        </View>
       );
     }
 
@@ -86,11 +88,11 @@ class AssetCard extends Component {
           style={styles.closeButton}
           transparent
         >
-          <Icon name='ios-close-circle' style={{fontSize: 30, color: '#5cb85c'}} />
+          <Icon name='ios-close-circle' style={{fontSize: 25, color: '#5cb85c'}} />
         </Button>
       </View>
     );
-  }
+  }1
 
   render() {
     return (
@@ -106,10 +108,10 @@ class AssetCard extends Component {
         </CardItem>
 
         <CardItem cardBody>
-					{this.renderCommentSection()}
+          {this.renderCommentSection()}
         </CardItem>
 
-        <CardItem header>                        
+        <CardItem>
           {this.renderFooter()}
         </CardItem>
       </Card>
@@ -126,10 +128,11 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     flexDirection: 'row',
+    flex: 1,
     justifyContent: 'space-between',
   },
   closeButton: {
-    minWidth: 17,
+    minWidth: 15,
   },
   editButton: {
     minWidth: 21,
@@ -148,7 +151,14 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontWeight: '300',
     fontSize: 14,
+    marginTop: 0,
   },
+  commentTexttitle: {
+  color: '#000000',
+  fontWeight: '500',
+  fontSize: 14,
+  marginTop: 0,
+  }
 });
 
 export {

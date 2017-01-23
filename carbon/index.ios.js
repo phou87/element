@@ -143,7 +143,7 @@ export default class carbon extends Component {
       case SCENES.PORTFOLIO:
         return "Portfolio";
       case SCENES.BUY_SELL:
-        return "Buy/Sell";
+        return "Create Transaction";
     }
     
     return "Sharefolio";

@@ -7,12 +7,13 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
-import {Button, List, ListItem, Thumbnail, Text} from 'native-base';
+import {Button, List, ListItem, Thumbnail, Text, Icon} from 'native-base';
 
 import FacebookDispatcher from '../dispatchers/FacebookDispatcher'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import {SCENES} from '../common/constants'
 import {FacebookURI} from '../common/FacebookURI';
+import mytheme2 from '../common/mytheme2';
 
 class PotentialFriendRow extends Component {
   constructor(props) {
@@ -35,14 +36,17 @@ class PotentialFriendRow extends Component {
     }
     
     return (
-      <Button rounded block onPress={this.onAddFriend} style={styles.addButton} success>Add</Button>
+      <Button rounded block onPress={this.onAddFriend} style={styles.addButton} success>
+            <Icon name='ios-add-circle' />
+            Add
+      </Button>
     );
   }
 
   render() {
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
     return (
-      <ListItem>
+      <ListItem theme={mytheme2}>
         <Thumbnail square size={75} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
         {this._renderRightRowSection(this.props.friend)}

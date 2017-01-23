@@ -69,7 +69,7 @@ return this.iconFontSize*.6;
 
 
 
-cardDefaultBg:'#E5E5E5',
+cardDefaultBg:'#E0E0E5',
 
 
 
@@ -175,7 +175,7 @@ lineHeight:_reactNative.Platform.OS==='ios'?20:24,
 
 
 
-listBorderColor:'#fff',
+listBorderColor:'#5cb85c',
 listDividerBg:'#ddd',
 listItemHeight:45,
 listItemPadding:_reactNative.Platform.OS==='ios'?15:16,

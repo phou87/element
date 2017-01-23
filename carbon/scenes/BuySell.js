@@ -139,11 +139,13 @@ class BuySell extends Component {
       <List>
         <ListItem>
           <InputGroup>
-              <Input onChangeText={this.setCusipText} placeholder="Enter a Stock Symbol" style={styles.cusipText} value={this.state.cusipText} />
+            <Icon name='ios-search' style={{color: '#5cb85c'}}/>
+            <Input onChangeText={this.setCusipText} placeholder="Enter a Stock Symbol" style={styles.cusipText} value={this.state.cusipText} />
           </InputGroup>
         </ListItem>
         <ListItem>
           <InputGroup>
+              <Icon name= 'ios-chatboxes' style={{height: 190, color: '#5cb85c'}}/>
               <Input multiline={true} numberOfLines={4} onChangeText={this.setCommentText} placeholder="Tell your friends more about this stock!" style={styles.commentBox} value={this.state.commentText} />
           </InputGroup>
         </ListItem>
@@ -152,10 +154,16 @@ class BuySell extends Component {
           <Text>Notify Your Friends</Text>
         </ListItem>
         <ListItem>
-            <Button rounded block info onPress={this.buy}>Buy</Button>
+            <Button rounded block info onPress={this.buy}>
+                <Icon name='ios-add-circle' />
+                Buy
+            </Button>
         </ListItem>
         <ListItem>
-            <Button rounded block success onPress={this.sell}> Sell </Button>
+            <Button rounded block success onPress={this.sell}>
+                <Icon name='ios-remove-circle' />
+                Sell
+            </Button>
         </ListItem>
       </List>
 
@@ -168,7 +176,8 @@ const styles = StyleSheet.create({
   commentBox: {
     height: 200,
     fontWeight: '500',
-    fontSize: 15,
+    fontSize: 16,
+    color: '#808080',
   },
   container: {
   	flex: 1,
