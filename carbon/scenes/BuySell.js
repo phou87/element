@@ -82,7 +82,7 @@ class BuySell extends Component {
     if (!asset) {
       Alert.alert(
         'Error',
-        'You do not own this security.',
+        'You do not have this Stock in your portfolio.',
         [{text: 'OK'}],
       );
       return;
@@ -91,7 +91,7 @@ class BuySell extends Component {
     if (error) {
       Alert.alert(
         'Error',
-        'Something went wrong.  Please try again later.',
+        'Something went wrong.  Please try again.',
         [{text: 'OK'}],
       );
     } else {
@@ -100,7 +100,7 @@ class BuySell extends Component {
       }
       Alert.alert(
         'Stock sold',
-        'You successfully sold ' + asset.attributes.cusip + '!',
+        'You successfully sold this Stock ' + asset.attributes.cusip + '!',
         [{text: 'OK'}],
       );
     }
@@ -109,8 +109,8 @@ class BuySell extends Component {
   _checkInputs() {
     if (!this.state.cusipText) {
       Alert.alert(
-        'No stock entered',
-        'You must enter a stock to buy or sell.',
+        'No Symbol Found',
+        'You must enter a stock symbol to create a transaction.',
         [
           {text: 'OK', onPress: () => console.log('OK Pressed!')},
         ]
