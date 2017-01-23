@@ -127,20 +127,54 @@ const ParseDispatcher = {
     });
   },
   
-  getAllAssets(user, callback) {
-    let query = new Parse.Query(Asset);
-    query.equalTo("owner", user);
-    query.find({
-      success: results => {
-        let likedQuery = new Parse.Query(LikedAsset);
-        likedQuery.equalTo("owner", user);
-        likedQuery.find({
-          success: likedResults => callback(results, likedResults),
-          error: error => console.debug(error) && callback(results, []),
-        });
-      },
-      error: error => console.debug(error) && callback([], []),
-    });
+  async getAllAssets(user, callback) {
+    try {
+      let query = new Parse.Query(Asset);
+      query.equalTo("owner", user);
+
+      let results = await query.find();
+
+      let likedCounts = await ParseDispatcher.getLikeCountForAssets(user, results);
+      let likedQuery = new Parse.Query(LikedAsset);
+      likedQuery.equalTo("owner", user);
+
+      let likedResults = await likedQuery.find();
+
+      callback(results, likedResults, likedCounts);
+    } catch (error) {
+      console.debug(error);
+      callback([], [], []);
+    }
+  },
+
+  async getLikeCountForAssets(user, assets) {
+    let friendships = user.relation("friendships");
+    // let list = await friendships.query().find();
+
+    let friendQuery = new Parse.Query(Parse.User);
+    friendQuery.matchesKeyInQuery("facebookID", "friend_id", friendships.query());
+
+    try {
+      let results = await friendQuery.find();
+
+      let assetQuery = new Parse.Query(LikedAsset);
+      assetQuery.containedIn("owner", results);
+      assetQuery.containedIn("cusip", assets.map(asset => asset.get("cusip")));
+
+      let likedAssets = await assetQuery.find();
+
+      let assetMap = {};
+
+      for (let asset of likedAssets) {
+        let oldValue = assetMap[asset.get("cusip")];
+        assetMap[asset.get("cusip")] = oldValue ? oldValue + 1 : 1;
+      }
+
+      return assetMap;
+    } catch (error) {
+      console.debug(error);
+      return {};
+    }
   },
   
   removeAsset(user, cusip, isShort, callback) {

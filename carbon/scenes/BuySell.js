@@ -139,12 +139,12 @@ class BuySell extends Component {
       <List>
         <ListItem>
           <InputGroup>
-              <Input placeholder="Enter a Stock Symbol" style={styles.cusipText} />
+              <Input onChangeText={this.setCusipText} placeholder="Enter a Stock Symbol" style={styles.cusipText} value={this.state.cusipText} />
           </InputGroup>
         </ListItem>
         <ListItem>
           <InputGroup>
-              <Input multiline={true} numberOfLines={4} placeholder="Tell your friends more about this stock!" style={styles.commentBox} />
+              <Input multiline={true} numberOfLines={4} onChangeText={this.setCommentText} placeholder="Tell your friends more about this stock!" style={styles.commentBox} value={this.state.commentText} />
           </InputGroup>
         </ListItem>
         <ListItem>

@@ -5,32 +5,80 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
-import {Button, Card, CardItem, Icon, Tabs, Text} from 'native-base';
+import {Button, Card, CardItem, Icon, Input, InputGroup, Tabs, Text} from 'native-base';
 
 import mytheme from '../common/mytheme';
 
 class AssetCard extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      comment: props.comment,
+      editing: false,
+    };
     
+    this.onChangeComment = this.onChangeComment.bind(this);
     this.onClickLike = this.onClickLike.bind(this);
+    this.onEditAsset = this.onEditAsset.bind(this);
     this.onRemoveAsset = this.onRemoveAsset.bind(this);
   }
-  
+
+  onChangeComment(comment) {
+    this.setState({comment});
+  }
+
   onClickLike() {
     this.props.onClickLike(this.props.cusip);
+  }
+
+  onEditAsset() {
+    this.setState({editing: true});
   }
 
   onRemoveAsset() {
     this.props.onRemoveAsset(this.props.cusip, this.props.isShort);
   }
-  
+
+  renderCommentSection() {
+    if (!this.state.editing) {
+      return (
+        <Text style={styles.commentText}>
+          {this.props.comment ? this.props.comment : 'Nothing to say - this stock speaks for itself'}
+        </Text>
+      );
+    }
+
+    return (
+      <InputGroup>
+        <Input onChangeText={this.onChangeComment} value={this.state.comment} />
+      </InputGroup>
+    );
+  }
+
+  renderEditButton() {
+    return null;
+
+    /*
+    return (
+      <Button
+        info
+        onPress={this.onEditAsset}
+        rounded
+        style={styles.editButton}
+        transparent
+      >
+        <Icon name='ios-color-wand' style={{fontSize: 35, color: '#5bc0de'}} />
+      </Button>
+    );
+    */
+  }
+
   renderFooter() {
     return (
       <View style={styles.cardFooter}>
         <Button onPress={this.onClickLike} transparent>
           {this.props.isLiked ? <Icon name='ios-heart' style={{color: '#d9534f'}} /> : <Icon name='ios-heart-outline' style={{color: '#d9534f'}} />}
-          12
+          {this.props.likeCount ? this.props.likeCount : ''}
         </Button>
         <Button
           onPress={this.onRemoveAsset}
@@ -53,22 +101,12 @@ class AssetCard extends Component {
               <Text style={styles.symbolText}>{this.props.cusip}</Text>
               <Text style={styles.updatedAtText}>Updated on {this.props.updatedAt}</Text>
             </View>
-            <Button
-              info
-              onPress={this.onRemoveAsset}
-              rounded
-              style={styles.editButton}
-              transparent
-            >
-              <Icon name='ios-color-wand' style={{fontSize: 35, color: '#5bc0de'}} />
-            </Button>
+            {this.renderEditButton()}
           </View>
         </CardItem>
 
         <CardItem cardBody>
-          <Text style={styles.commentText}>
-            {this.props.comment ? this.props.comment : 'Nothing to say - this stock speaks for itself'}
-          </Text>
+					{this.renderCommentSection()}
         </CardItem>
 
         <CardItem header>                        

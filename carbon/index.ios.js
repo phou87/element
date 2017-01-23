@@ -31,7 +31,7 @@ export default class carbon extends Component {
     Parse.initialize("10000");
     Parse.serverURL = 'http://parseserver-hj59s-env.us-west-2.elasticbeanstalk.com/parse/';
     //Parse.initialize("4444");
-    //Parse.serverURL = 'http://192.168.10.175:1337/parse';
+    //Parse.serverURL = 'http://localhost:1337/parse';
     
     this.onLogout = this.onLogout.bind(this);
     this.onRegistered = this.onRegistered.bind(this);

@@ -1,4 +1,5 @@
 import {
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -19,6 +20,7 @@ class Portfolio extends Component {
       expandedAssets: [],
       isLoading: true,
       likedAssets: [],
+      likeCounts: {},
       testIsLiked: false,
     };
     
@@ -49,15 +51,17 @@ class Portfolio extends Component {
     this.forceUpdate();
   }
   
-  onGetAssets(assets, likedAssets) {
+  onGetAssets(assets, likedAssets, likeCounts) {
     this.setState({
       assets,
       isLoading: false,
       likedAssets,
+      likeCounts,
     });
   }
   
   _renderAssets() {
+    console.debug('hi');
     if (this.state.isLoading) {
       return (
         <View style={{alignItems: 'center', flex: 1, justifyContent: 'center'}}>
@@ -66,7 +70,11 @@ class Portfolio extends Component {
       );
     }
   
-  	return this.state.assets.map(asset => this._renderAsset(asset));
+  	return (
+      <View>
+        {this.state.assets.map(asset => this._renderAsset(asset))}
+      </View>
+    );
   }
   
   _renderAsset(asset) {
@@ -76,6 +84,7 @@ class Portfolio extends Component {
           comment={asset.attributes.comment}
           cusip={asset.attributes.cusip}
           isLiked={this.isAssetLiked(asset.attributes.cusip)}
+          likeCount={this.state.likeCounts[asset.get("cusip")]}
           onClickLike={this.onClickLike}
           onRemoveAsset={this.onRemoveAsset}
           updatedAt={asset.attributes.updatedAt.toDateString()}
@@ -107,12 +116,12 @@ class Portfolio extends Component {
 
   render() {
     let title = this.props.ownPortfolio ? 'Portfolio' : this.props.loggedInUser.get("name");
-  
+
     return (
       <View>
         <Tabs>
-          <Container tabLabel="My Portfolio"><Content>{this._renderAssets()}</Content></Container>
-          <Container tabLabel="Stocks I've Liked"><Content><Text>Test</Text></Content></Container>
+          <View style={styles.tab} tabLabel="My Portfolio">{this._renderAssets()}</View>
+          <View style={styles.tab} tabLabel="Stocks I've Liked"><Text>Test</Text></View>
         </Tabs>
       </View>
     );
@@ -136,6 +145,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  tab: {
+    flex: 1,
   },
   test: {
     flexDirection: 'row',
