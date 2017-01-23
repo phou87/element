@@ -70,6 +70,7 @@ class AssetCard extends Component {
             {this.props.comment ? this.props.comment : 'Nothing to say - this stock speaks for itself'}
           </Text>
         </CardItem>
+
         <CardItem header>                        
           {this.renderFooter()}
         </CardItem>
@@ -96,17 +97,19 @@ const styles = StyleSheet.create({
     minWidth: 21,
   },
   updatedAtText: {
-    color: '#ffffff',
+    color: '#000000',
     fontWeight: '600',
+    fontSize: 12,
   },
   symbolText: {
     color: '#000000',
-    fontWeight: '600',
+    fontWeight: '700',
+    fontSize: 16,
   },
   commentText: {
     color: '#000000',
     fontWeight: '300',
-
+    fontSize: 14,
   },
 });
 

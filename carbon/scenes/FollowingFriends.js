@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {Button, List, ListItem, Thumbnail, Text} from 'native-base';
+import {Button, List, ListItem, Thumbnail, Text,Icon} from 'native-base';
 
 import React, { Component } from 'react';
 import {SCENES} from '../common/constants'
@@ -42,7 +42,16 @@ class FriendRow extends Component {
     }
     
     return (
-      <Button rounded block onPress={this.onRemoveFriend} style={styles.removeButton} success>Unfollow</Button>
+            <View>
+                <Button small rounded block onPress={this.onRemoveFriend} style={styles.removeButton} success>
+                    <Icon name='ios-remove-circle' />
+                    <Text style={styles.friendName}>Unfollow</Text>
+                </Button>
+                <Button small rounded block onPress={this.onRemoveFriend} style={styles.removeButton} info>
+                    <Icon name='ios-trending-up' />
+                    <Text style={styles.friendName}>See Portfolio</Text>
+                </Button>
+            </View>
     );
   }
 
