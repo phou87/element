@@ -5,6 +5,7 @@ import {
   Switch,
   TextInput,
   View,
+  Linking
 } from 'react-native';
 
 import React, { Component } from 'react';
@@ -167,7 +168,12 @@ class BuySell extends Component {
         </ListItem>
       </List>
 
+            <Text style={styles.footer}
+            onPress={() => Linking.openURL('https://www.elementapp.co/privacy-policy/')}>
+            Privacy Policy and Terms and Conditions
+            </Text>
       </View>
+
     );
   }
 }
@@ -229,6 +235,12 @@ const styles = StyleSheet.create({
   },
   notifyFriendsText: {
     fontWeight: 'bold',
+  },
+  footer: {
+  position: 'absolute', left: 0, right: 0, bottom: -240,
+  margin: 15,
+  fontSize: 12,
+  color: '#808080',
   },
 });
 

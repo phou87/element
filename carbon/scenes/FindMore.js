@@ -51,6 +51,7 @@ class PotentialFriendRow extends Component {
       <ListItem theme={mytheme2}>
         <Thumbnail square size={75} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
+        <Text note>Number of Followers</Text>
         {this._renderRightRowSection(this.props.friend)}
       </ListItem>
     );
