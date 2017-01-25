@@ -114,11 +114,11 @@ class Portfolio extends Component {
 
   renderLikedAsset(asset) {
     return (
-      <View key={asset.get('cusip')} style={styles.assetRow}>
+      <View key={asset.attributes.cusip} style={styles.assetRow}>
         <AssetCard
-          cusip={asset.get('cusip')}
+          cusip={asset.attributes.cusip}
           isLiked={true}
-          likeCount={this.state.likeCounts[asset.get('cusip')]}
+          likeCount={this.state.likeCounts[asset.attributes.cusip]}
           onClickLike={this.unlikeLikedAsset}
         />
       </View>
