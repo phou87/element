@@ -63,7 +63,6 @@ class FriendRow extends Component {
       <ListItem theme={mytheme2}>
         <Thumbnail circle size={50} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
-        <Text note>Number of Stocks in Portfolio</Text>
         {this.renderRightRowSection(this.props.friend)}
       </ListItem>
     );
