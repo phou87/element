@@ -134,11 +134,19 @@ const ParseDispatcher = {
 
       let results = await query.find();
 
-      let likedCounts = await ParseDispatcher.getLikeCountForAssets(user, results);
       let likedQuery = new Parse.Query(LikedAsset);
       likedQuery.equalTo("owner", user);
 
       let likedResults = await likedQuery.find();
+
+			let relevantAssets = results.map(asset => asset.get("cusip"));
+			for (let likedAsset of likedResults) {
+				if (relevantAssets.indexOf(likedAsset.get("cusip")) === -1) {
+					relevantAssets.push(likedAsset.get('cusip'));
+        }
+      }
+
+			let likedCounts = await ParseDispatcher.getLikeCountForAssets(user, relevantAssets);
 
       callback(results, likedResults, likedCounts);
     } catch (error) {
@@ -159,7 +167,7 @@ const ParseDispatcher = {
 
       let assetQuery = new Parse.Query(LikedAsset);
       assetQuery.containedIn("owner", results);
-      assetQuery.containedIn("cusip", assets.map(asset => asset.get("cusip")));
+      assetQuery.containedIn("cusip", assets);
 
       let likedAssets = await assetQuery.find();
 

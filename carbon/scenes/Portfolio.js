@@ -28,6 +28,7 @@ class Portfolio extends Component {
     this.onGetAssets = this.onGetAssets.bind(this);
     this.onRemoveAsset = this.onRemoveAsset.bind(this);
     this.onRemoveAssetCallback = this.onRemoveAssetCallback.bind(this);
+    this.unlikeLikedAsset = this.unlikeLikedAsset.bind(this);
   }
 
   componentWillMount() {
@@ -61,7 +62,6 @@ class Portfolio extends Component {
   }
   
   _renderAssets() {
-    console.debug('hi');
     if (this.state.isLoading) {
       return (
         <View style={{alignItems: 'center', flex: 1, justifyContent: 'center'}}>
@@ -103,6 +103,27 @@ class Portfolio extends Component {
       </View>
     );
   }
+
+  renderLikedAssets() {
+		return (
+      <View>
+        {this.state.likedAssets.map(asset => this.renderLikedAsset(asset))}
+      </View>
+    );
+  }
+
+  renderLikedAsset(asset) {
+    return (
+      <View key={asset.get('cusip')} style={styles.assetRow}>
+        <AssetCard
+          cusip={asset.get('cusip')}
+          isLiked={true}
+          likeCount={this.state.likeCounts[asset.get('cusip')]}
+          onClickLike={this.unlikeLikedAsset}
+        />
+      </View>
+    );
+  }
   
   onRemoveAsset(cusip, isShort) {
     ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
@@ -114,6 +135,10 @@ class Portfolio extends Component {
     this.forceUpdate();
   }
 
+  unlikeLikedAsset(cusip) {
+
+  }
+
   render() {
     let title = this.props.ownPortfolio ? 'Portfolio' : this.props.loggedInUser.get("name");
 
@@ -121,7 +146,7 @@ class Portfolio extends Component {
       <View>
         <Tabs>
           <View style={styles.tab} tabLabel="My Portfolio">{this._renderAssets()}</View>
-          <View style={styles.tab} tabLabel="Stocks I've Liked"><Text>Test</Text></View>
+          <View style={styles.tab} tabLabel="Stocks I've Liked">{this.renderLikedAssets()}</View>
         </Tabs>
       </View>
     );

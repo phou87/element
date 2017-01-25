@@ -82,17 +82,17 @@ class AssetCard extends Component {
           {this.props.isLiked ? <Icon name='ios-heart' style={{color: '#d9534f'}} /> : <Icon name='ios-heart-outline' style={{color: '#d9534f'}} />}
           {this.props.likeCount ? this.props.likeCount : ''}
         </Button>
-        <Button
+        {this.props.onRemoveAsset &&<Button
           onPress={this.onRemoveAsset}
           rounded
           style={styles.closeButton}
           transparent
         >
           <Icon name='ios-close-circle' style={{fontSize: 25, color: '#5cb85c'}} />
-        </Button>
+        </Button>}
       </View>
     );
-  }1
+  }
 
   render() {
     return (
@@ -101,7 +101,7 @@ class AssetCard extends Component {
           <View style={styles.cardHeader}>
             <View>
               <Text style={styles.symbolText}>{this.props.cusip}</Text>
-              <Text style={styles.updatedAtText}>Updated on {this.props.updatedAt}</Text>
+              {this.props.updatedAt && <Text style={styles.updatedAtText}>Updated on {this.props.updatedAt}</Text>}
             </View>
             {this.renderEditButton()}
           </View>

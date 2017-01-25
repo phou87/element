@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   Image,
   StyleSheet,
   View,
@@ -7,7 +6,7 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
-import {Button, List, ListItem, Thumbnail, Text, Icon} from 'native-base';
+import {Button, Icon, List, ListItem, Spinner, Thumbnail, Text} from 'native-base';
 
 import FacebookDispatcher from '../dispatchers/FacebookDispatcher'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
@@ -45,6 +44,9 @@ class PotentialFriendRow extends Component {
 
   render() {
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
+    uri.addParam('height', '128');
+    uri.addParam('width', '128');
+
     return (
       <ListItem theme={mytheme2}>
         <Thumbnail square size={75} source={{uri: uri.getURI()}} />
@@ -74,7 +76,7 @@ class FindMore extends Component {
 
   _renderPotentialFriends() {
     if (this.state.isLoading) {
-      return <ActivityIndicator />;
+      return <Spinner color="green" />;
     }
   
     let authData = this.props.loggedInUser.get('authData').facebook;
@@ -107,10 +109,10 @@ class FindMore extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    backgroundColor: 'white',
+    justifyContent: 'center',
   },
   addedText: {
     color: 'white',

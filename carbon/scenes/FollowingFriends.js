@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -7,7 +6,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {Button, List, ListItem, Thumbnail, Text,Icon} from 'native-base';
+import {Button, Icon, List, ListItem, Spinner, Thumbnail, Text} from 'native-base';
 
 import React, { Component } from 'react';
 import {SCENES} from '../common/constants'
@@ -57,6 +56,9 @@ class FriendRow extends Component {
 
   render() {
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
+    uri.addParam('height', '128');
+    uri.addParam('width', '128');
+
     return (
       <ListItem theme={mytheme2}>
         <Thumbnail circle size={50} source={{uri: uri.getURI()}} />
@@ -87,7 +89,7 @@ class FollowingFriends extends Component {
 
   _renderFriends() {
     if (this.state.isLoading) {
-      return <ActivityIndicator />;
+      return <Spinner color="green" />;
     }
   
     let authData = this.props.loggedInUser.get('authData').facebook;
@@ -121,10 +123,10 @@ class FollowingFriends extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    backgroundColor: 'white',
+    justifyContent: 'center',
   },
   friendRow: {
     alignItems: 'center',
