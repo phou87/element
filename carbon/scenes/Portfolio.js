@@ -11,6 +11,9 @@ import {Container, Content, Spinner} from 'native-base';
 
 import ParseDispatcher from '../dispatchers/ParseDispatcher';
 import {AssetCard} from '../components/AssetCard';
+import {SwipeableComponent} from '../components/SwipeableComponent';
+
+const AssetCardSwipable = SwipeableComponent(AssetCard);
 
 class Portfolio extends Component {
   constructor(props) {
@@ -80,7 +83,7 @@ class Portfolio extends Component {
   _renderAsset(asset) {
     let main = (
       <View key={asset.id} style={styles.assetRow}>
-        <AssetCard
+        <AssetCardSwipable
           comment={asset.attributes.comment}
           cusip={asset.attributes.cusip}
           isLiked={this.isAssetLiked(asset.attributes.cusip)}
@@ -115,7 +118,7 @@ class Portfolio extends Component {
   renderLikedAsset(asset) {
     return (
       <View key={asset.attributes.cusip} style={styles.assetRow}>
-        <AssetCard
+        <AssetCardSwipable
           cusip={asset.attributes.cusip}
           isLiked={true}
           likeCount={this.state.likeCounts[asset.attributes.cusip]}

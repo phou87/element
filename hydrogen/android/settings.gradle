@@ -1,0 +1,3 @@
+rootProject.name = 'hydrogen'
+
+include ':app'
