@@ -20,6 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  setenv("CFNETWORK_DIAGNOSTICS", "3", 1);
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
@@ -42,8 +43,8 @@
   
   // Initialize Parse.
   [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
-     configuration.applicationId = @"10000";
-     configuration.server = @"http://parseserver-hj59s-env.us-west-2.elasticbeanstalk.com/parse/";
+     configuration.applicationId = @"1000";
+     configuration.server = @"https://api.elementapp.co/parse/";
   }]];
   
   return YES;

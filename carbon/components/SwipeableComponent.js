@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Animated, Dimensions, PanResponder} from 'react-native';
+import {Animated, Dimensions} from 'react-native';
 
 const deviceScreen = Dimensions.get('window');
 
@@ -8,57 +8,36 @@ const SwipeableComponent = El => class extends Component {
     super(props);
 		this.state = {
 			offset: new Animated.ValueXY(),
+      rotate: new Animated.Value(0),
     };
+
+    this.onSwipe = this.onSwipe.bind(this);
   }
 
-  componentWillMount() {
-    this._panResponder = PanResponder.create({
-			onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onPanResponderGrant: () => null,
-      onPanResponderMove: (e, gestureState) => {
-        Animated.event([null, {dx: this.state.offset.x, dy: this.state.offset.y}])(e, gestureState);
-			},
-      onPanResponderRelease: (e, gestureState) => {
-        console.debug(gestureState, deviceScreen.width / 2);
-        if (gestureState.dx > deviceScreen.width / 3) {
-          Animated.decay(this.state.offset, {
-            velocity: {x: 3, y: gestureState.vy},
-            deceleration: 0.98,
-          }).start();
-        } else {
-          Animated.spring(this.state.offset, {
-            toValue: {x: 0, y: 0},
-          }).start();
-        }
-      },
-    });
-  }
-
-  onStartSwipe() {
-    Animated.spring(this.state.offset, {
-      toValue: deviceScreen.width,
-      friction: 7,
-    }).start();
+  onSwipe(callback) {
+		Animated.timing(this.state.offset, {
+      duration: 300,
+      toValue: {x: 800, y: -800},
+    }).start(callback);
   }
 
   getStyles() {
 		let {offset} = this.state;
+    let rotate = offset.x.interpolate({inputRange: [-700, 0, 700], outputRange: ['-10deg', '0deg', '1080deg']});
 
 		return {
       transform: [
         {translateX: offset.x},
         {translateY: offset.y},
+        {rotate},
       ],
     };
   }
 
   render() {
     return (
-      <Animated.View {...this._panResponder.panHandlers} style={this.getStyles()}>
-        <El {...this.props} />
+      <Animated.View style={this.getStyles()}>
+        <El {...this.props} onSwipe={this.onSwipe} />
       </Animated.View>
     );
   }

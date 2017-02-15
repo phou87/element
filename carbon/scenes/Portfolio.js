@@ -81,11 +81,16 @@ class Portfolio extends Component {
   }
   
   _renderAsset(asset) {
+    if (asset.removed) {
+      return null;
+    }
+
     let main = (
       <View key={asset.id} style={styles.assetRow}>
         <AssetCardSwipable
           comment={asset.attributes.comment}
           cusip={asset.attributes.cusip}
+          id={asset.id}
           isLiked={this.isAssetLiked(asset.attributes.cusip)}
           likeCount={this.state.likeCounts[asset.get("cusip")]}
           onClickLike={this.onClickLike}
@@ -128,11 +133,14 @@ class Portfolio extends Component {
     );
   }
   
-  onRemoveAsset(cusip, isShort) {
-    ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
+  onRemoveAsset(cusip, isShort, id) {
+    console.debug('gogo');
+    this.onRemoveAssetCallback({id});
+    // ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
   }
   
   onRemoveAssetCallback(asset) {
+    console.debug(asset);
   	let index = this.state.assets.findIndex(currentAsset => currentAsset.id === asset.id);
     this.state.assets[index].removed = true;
     this.forceUpdate();

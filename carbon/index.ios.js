@@ -28,8 +28,8 @@ export default class carbon extends Component {
       potentialFriends: [],
       scene: SCENES.LOGIN,
     };
-    Parse.initialize("10000");
-    Parse.serverURL = 'http://parseserver-hj59s-env.us-west-2.elasticbeanstalk.com/parse/';
+    Parse.initialize("1000");
+    Parse.serverURL = 'https://api.elementapp.co/parse/';
     //Parse.initialize("4444");
     //Parse.serverURL = 'http://localhost:1337/parse';
     

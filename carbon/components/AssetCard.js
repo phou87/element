@@ -35,7 +35,7 @@ class AssetCard extends Component {
   }
 
   onRemoveAsset() {
-    this.props.onRemoveAsset(this.props.cusip, this.props.isShort);
+    this.props.onSwipe(() => this.props.onRemoveAsset(this.props.cusip, this.props.isShort, this.props.id));
   }
 
   renderCommentSection() {
