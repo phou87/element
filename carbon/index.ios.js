@@ -121,7 +121,7 @@ export default class carbon extends Component {
       }
       this.setState({
         portfolioUser: friend[0],
-        scene: SCENES.PORTFOLIO,
+        scene: SCENES.FRIEND_PORTFOLIO,
       });
     });
   }
@@ -144,6 +144,8 @@ export default class carbon extends Component {
         return "Portfolio";
       case SCENES.BUY_SELL:
         return "Create Transaction";
+      case SCENES.FRIEND_PORTFOLIO:
+        return this.state.portfolioUser.get('name') + '\'s Portfolio';
     }
     
     return "Sharefolio";
@@ -176,6 +178,7 @@ export default class carbon extends Component {
         );
         break;
       case SCENES.PORTFOLIO:
+      case SCENES.FRIEND_PORTFOLIO:
         let user = this.state.portfolioUser ? this.state.portfolioUser : this.state.loggedInUser;
         child = (
           <Portfolio

@@ -131,7 +131,7 @@ class BuySell extends Component {
   }
   
   setNotifyFriendsSwitch() {
-    this.setState({notifyFriendsSwitch: !this.state.setNotifyFriendsSwitch});
+    this.setState({notifyFriendsSwitch: !this.state.notifyFriendsSwitch});
   }
 
 	render() {

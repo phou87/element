@@ -4,4 +4,5 @@ export const SCENES = {
   FIND_FRIENDS: 2,
   PORTFOLIO: 3,
   BUY_SELL: 4,
+  FRIEND_PORTFOLIO: 5,
 };

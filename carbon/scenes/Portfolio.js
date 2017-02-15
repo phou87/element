@@ -1,4 +1,5 @@
 import {
+  LayoutAnimation,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -134,7 +135,6 @@ class Portfolio extends Component {
   }
   
   onRemoveAsset(cusip, isShort, id) {
-    console.debug('gogo');
     this.onRemoveAssetCallback({id});
     // ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
   }
@@ -143,6 +143,7 @@ class Portfolio extends Component {
     console.debug(asset);
   	let index = this.state.assets.findIndex(currentAsset => currentAsset.id === asset.id);
     this.state.assets[index].removed = true;
+    LayoutAnimation.spring();
     this.forceUpdate();
   }
 

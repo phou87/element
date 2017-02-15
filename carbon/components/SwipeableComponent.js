@@ -16,7 +16,7 @@ const SwipeableComponent = El => class extends Component {
 
   onSwipe(callback) {
 		Animated.timing(this.state.offset, {
-      duration: 300,
+      duration: 350,
       toValue: {x: 800, y: -800},
     }).start(callback);
   }

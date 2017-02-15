@@ -46,7 +46,7 @@ class FriendRow extends Component {
                     <Icon name='ios-remove-circle' />
                     <Text style={styles.friendName}>Unfollow</Text>
                 </Button>
-                <Button small rounded block onPress={this.onRemoveFriend} style={styles.removeButton} info>
+                <Button small rounded block onPress={this.onSwitchPortfolio} style={styles.removeButton} info>
                     <Icon name='ios-trending-up' />
                     <Text style={styles.friendName}>See Portfolio</Text>
                 </Button>
