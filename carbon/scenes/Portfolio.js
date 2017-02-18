@@ -129,6 +129,7 @@ class Portfolio extends Component {
           isLiked={true}
           likeCount={this.state.likeCounts[asset.attributes.cusip]}
           onClickLike={this.unlikeLikedAsset}
+          removeOnUnlike={true}
         />
       </View>
     );
@@ -148,12 +149,11 @@ class Portfolio extends Component {
   }
 
   unlikeLikedAsset(cusip) {
-
+    LayoutAnimation.spring();
+		this.onClickLike(cusip);
   }
 
-  render() {
-    let title = this.props.ownPortfolio ? 'Portfolio' : this.props.loggedInUser.get("name");
-
+  renderOwnPortfolio() {
     return (
       <View>
         <Tabs>
@@ -162,6 +162,22 @@ class Portfolio extends Component {
         </Tabs>
       </View>
     );
+  }
+
+  renderOtherPortfolio() {
+    return (
+      <View>
+        {this._renderAssets()}
+      </View>
+    );
+  }
+
+  render() {
+    if (this.props.ownPortfolio) {
+      return this.renderOwnPortfolio();
+    } else {
+      return this.renderOtherPortfolio();
+    }
   }
 }
 
