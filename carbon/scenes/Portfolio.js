@@ -36,7 +36,12 @@ class Portfolio extends Component {
   }
 
   componentWillMount() {
-    ParseDispatcher.getAllAssets(this.props.loggedInUser, this.onGetAssets);
+    ParseDispatcher.getAllAssets(this.props.loggedInUser, this.props.superUser, this.onGetAssets);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({expandedAssets: [], isLoading: true});
+		ParseDispatcher.getAllAssets(nextProps.loggedInUser, this.props.superUser, this.onGetAssets);
   }
   
   isAssetLiked(cusip) {
@@ -45,12 +50,14 @@ class Portfolio extends Component {
   
   onClickLike(cusip) {
     if (this.isAssetLiked(cusip)) {
-      ParseDispatcher.unlikeAsset(this.props.loggedInUser, cusip);
+      ParseDispatcher.unlikeAsset(this.props.superUser, cusip);
       let index = this.state.likedAssets.findIndex(asset => asset.attributes.cusip === cusip);
       this.state.likedAssets.splice(index, 1);
+      this.state.likeCounts[cusip] -= 1;
     } else {
-      ParseDispatcher.likeAsset(this.props.loggedInUser, cusip);
+      ParseDispatcher.likeAsset(this.props.superUser, cusip);
       this.state.likedAssets.push({attributes: {cusip}});
+      this.state.likeCounts[cusip] += 1;
     }
     
     this.forceUpdate();
@@ -73,9 +80,9 @@ class Portfolio extends Component {
         </View>
       );
     }
-  
+
   	return (
-      <View>
+      <View style={styles.tab}>
         {this.state.assets.map(asset => this._renderAsset(asset))}
       </View>
     );
@@ -93,6 +100,7 @@ class Portfolio extends Component {
           cusip={asset.attributes.cusip}
           id={asset.id}
           isLiked={this.isAssetLiked(asset.attributes.cusip)}
+          isShort={false}
           likeCount={this.state.likeCounts[asset.get("cusip")]}
           onClickLike={this.onClickLike}
           onRemoveAsset={this.onRemoveAsset}
@@ -115,7 +123,7 @@ class Portfolio extends Component {
 
   renderLikedAssets() {
 		return (
-      <View>
+      <View style={styles.tab}>
         {this.state.likedAssets.map(asset => this.renderLikedAsset(asset))}
       </View>
     );
@@ -136,20 +144,18 @@ class Portfolio extends Component {
   }
   
   onRemoveAsset(cusip, isShort, id) {
-    this.onRemoveAssetCallback({id});
-    // ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
+    ParseDispatcher.removeAsset(this.props.loggedInUser, cusip, isShort, this.onRemoveAssetCallback);
   }
   
-  onRemoveAssetCallback(asset) {
-    console.debug(asset);
+  onRemoveAssetCallback(asset, error) {
   	let index = this.state.assets.findIndex(currentAsset => currentAsset.id === asset.id);
     this.state.assets[index].removed = true;
-    LayoutAnimation.spring();
+    LayoutAnimation.easeInEaseOut();
     this.forceUpdate();
   }
 
   unlikeLikedAsset(cusip) {
-    LayoutAnimation.spring();
+    LayoutAnimation.easeInEaseOut();
 		this.onClickLike(cusip);
   }
 

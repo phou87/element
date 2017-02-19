@@ -1,5 +1,6 @@
 import {
   Image,
+  LayoutAnimation,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -32,14 +33,6 @@ class FriendRow extends Component {
   }
 
   renderRightRowSection(friend) {
-  	if (friend.unfriended) {
-    	return (
-        <Text style={styles.removedText}>
-          Removed!
-        </Text>
-      );
-    }
-    
     return (
             <View>
                 <Button small rounded block onPress={this.onRemoveFriend} style={styles.removeButton} success>
@@ -55,6 +48,10 @@ class FriendRow extends Component {
   }
 
   render() {
+		if (this.props.friend.unfriended) {
+			return null;
+    }
+
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
     uri.addParam('height', '128');
     uri.addParam('width', '128');
@@ -108,6 +105,7 @@ class FollowingFriends extends Component {
   onRemoveFriendCallback(friend_id) {
   	let index = this.props.existingFriends.findIndex(friend => friend.id === friend_id);
     this.props.existingFriends[index].unfriended = true;
+    LayoutAnimation.easeInEaseOut();
     this.forceUpdate();
   }
 

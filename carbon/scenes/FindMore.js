@@ -1,5 +1,6 @@
 import {
   Image,
+  LayoutAnimation,
   StyleSheet,
   View,
   ScrollView,
@@ -11,6 +12,7 @@ import {Button, Icon, List, ListItem, Spinner, Thumbnail, Text} from 'native-bas
 import FacebookDispatcher from '../dispatchers/FacebookDispatcher'
 import ParseDispatcher from '../dispatchers/ParseDispatcher'
 import {SCENES} from '../common/constants'
+import {SwipeableComponent} from '../components/SwipeableComponent';
 import {FacebookURI} from '../common/FacebookURI';
 import mytheme2 from '../common/mytheme2';
 
@@ -22,18 +24,14 @@ class PotentialFriendRow extends Component {
   }
   
   onAddFriend() {
-  	ParseDispatcher.addFriend(this.props.loggedInUser, this.props.friend.id, this.props.onAddFriendCallback);
+    ParseDispatcher.addFriend(this.props.loggedInUser, this.props.friend.id, this.props.onAddFriendCallback);
   }
   
   _renderRightRowSection(friend) {
-  	if (friend.friended) {
-    	return (
-        <Text style={styles.addedText}>
-          Added!
-        </Text>
-      );
+    if (friend.friended) {
+      return null;
     }
-    
+
     return (
       <Button rounded block onPress={this.onAddFriend} style={styles.addButton} success>
             <Icon name='ios-add-circle' />
@@ -43,6 +41,10 @@ class PotentialFriendRow extends Component {
   }
 
   render() {
+    if (this.props.friend.friended) {
+			return null;
+    }
+
     let uri = new FacebookURI(this.props.accessToken, this.props.friend.id + '/picture');
     uri.addParam('height', '128');
     uri.addParam('width', '128');
@@ -51,12 +53,14 @@ class PotentialFriendRow extends Component {
       <ListItem theme={mytheme2}>
         <Thumbnail square size={75} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
-        <Text note>Number of Followers</Text>
+        {/* <Text note>Number of Followers</Text> */}
         {this._renderRightRowSection(this.props.friend)}
       </ListItem>
     );
   }
 }
+
+const PotentialFriendSwipeable = SwipeableComponent(PotentialFriendRow);
 
 class FindMore extends Component {
   constructor(props) {
@@ -96,6 +100,7 @@ class FindMore extends Component {
   onAddFriendCallback(friend_id) {
   	let index = this.props.potentialFriends.findIndex(friend => friend.id === friend_id);
     this.props.potentialFriends[index].friended = true;
+    LayoutAnimation.easeInEaseOut();
     this.forceUpdate();
   }
 

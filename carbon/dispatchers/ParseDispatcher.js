@@ -127,7 +127,7 @@ const ParseDispatcher = {
     });
   },
   
-  async getAllAssets(user, callback) {
+  async getAllAssets(user, superUser, callback) {
     try {
       let query = new Parse.Query(Asset);
       query.equalTo("owner", user);
@@ -135,7 +135,7 @@ const ParseDispatcher = {
       let results = await query.find();
 
       let likedQuery = new Parse.Query(LikedAsset);
-      likedQuery.equalTo("owner", user);
+      likedQuery.equalTo("owner", superUser);
 
       let likedResults = await likedQuery.find();
 
@@ -146,7 +146,7 @@ const ParseDispatcher = {
         }
       }
 
-			let likedCounts = await ParseDispatcher.getLikeCountForAssets(user, relevantAssets);
+			let likedCounts = await ParseDispatcher.getLikeCountForAssets(user, relevantAssets, likedResults);
 
       callback(results, likedResults, likedCounts);
     } catch (error) {
@@ -155,7 +155,7 @@ const ParseDispatcher = {
     }
   },
 
-  async getLikeCountForAssets(user, assets) {
+  async getLikeCountForAssets(user, assets, likedResults) {
     let friendships = user.relation("friendships");
     // let list = await friendships.query().find();
 
@@ -178,6 +178,11 @@ const ParseDispatcher = {
         assetMap[asset.get("cusip")] = oldValue ? oldValue + 1 : 1;
       }
 
+      for (let asset of likedResults) {
+        let oldValue = assetMap[asset.get("cusip")];
+        assetMap[asset.get("cusip")] = oldValue ? oldValue + 1 : 1;
+      }
+
       return assetMap;
     } catch (error) {
       console.debug(error);
@@ -186,9 +191,11 @@ const ParseDispatcher = {
   },
   
   removeAsset(user, cusip, isShort, callback) {
+    console.debug('remove attemt', user, cusip, isShort);
     ParseDispatcher.getAsset(user, cusip, isShort, (asset, error) => {
       if (error) {
         callback(null, error);
+        return;
       }
     
       if (!asset) {
@@ -197,8 +204,10 @@ const ParseDispatcher = {
       }
       
       let id = asset.id;
-      asset.destroy();
-      callback(asset);
+      asset.destroy({
+        success: () => callback(asset),
+        error: (myObject, error) => callback(null, error),
+      });
     });
   },
   

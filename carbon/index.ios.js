@@ -178,13 +178,22 @@ export default class carbon extends Component {
         );
         break;
       case SCENES.PORTFOLIO:
-      case SCENES.FRIEND_PORTFOLIO:
-        let user = this.state.portfolioUser ? this.state.portfolioUser : this.state.loggedInUser;
         child = (
           <Portfolio
             {...this.state}
-            loggedInUser={user}
-            ownPortfolio={!this.state.portfolioUser}
+            loggedInUser={this.state.loggedInUser}
+            ownPortfolio={true}
+            superUser={this.state.loggedInUser}
+          />
+        );
+        break;
+      case SCENES.FRIEND_PORTFOLIO:
+        child = (
+          <Portfolio
+            {...this.state}
+            loggedInUser={this.state.portfolioUser}
+            ownPortfolio={false}
+            superUser={this.state.loggedInUser}
           />
         );
         break;
