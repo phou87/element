@@ -156,17 +156,18 @@ const ParseDispatcher = {
   },
 
   async getLikeCountForAssets(user, assets, likedResults) {
+    /*
     let friendships = user.relation("friendships");
-    // let list = await friendships.query().find();
 
     let friendQuery = new Parse.Query(Parse.User);
     friendQuery.matchesKeyInQuery("facebookID", "friend_id", friendships.query());
+    */
 
     try {
-      let results = await friendQuery.find();
+      // let results = await friendQuery.find();
 
       let assetQuery = new Parse.Query(LikedAsset);
-      assetQuery.containedIn("owner", results);
+      // assetQuery.containedIn("owner", results);
       assetQuery.containedIn("cusip", assets);
 
       let likedAssets = await assetQuery.find();

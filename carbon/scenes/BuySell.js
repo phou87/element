@@ -141,7 +141,15 @@ class BuySell extends Component {
         <ListItem>
           <InputGroup>
             <Icon name='ios-search' style={{color: '#5cb85c'}}/>
-            <Input onChangeText={this.setCusipText} placeholder="Enter a Stock Symbol" style={styles.cusipText} value={this.state.cusipText} />
+            <Input
+              autoCapitalize="characters"
+              autoCorrect={false}
+              maxLength={10}
+              onChangeText={this.setCusipText}
+              placeholder="Enter a Stock Symbol"
+              style={styles.cusipText}
+              value={this.state.cusipText}
+            />
           </InputGroup>
         </ListItem>
         <ListItem>

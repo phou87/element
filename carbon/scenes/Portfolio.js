@@ -64,6 +64,10 @@ class Portfolio extends Component {
   }
   
   onGetAssets(assets, likedAssets, likeCounts) {
+		likedAssets.sort((asset1, asset2) =>
+      likeCounts[asset2.attributes.cusip] - likeCounts[asset1.attributes.cusip]
+    );
+
     this.setState({
       assets,
       isLoading: false,
@@ -103,7 +107,7 @@ class Portfolio extends Component {
           isShort={false}
           likeCount={this.state.likeCounts[asset.get("cusip")]}
           onClickLike={this.onClickLike}
-          onRemoveAsset={this.onRemoveAsset}
+          onRemoveAsset={this.props.ownPortfolio && this.onRemoveAsset}
           updatedAt={asset.attributes.updatedAt.toDateString()}
         />
       </View>

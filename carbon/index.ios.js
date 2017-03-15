@@ -42,7 +42,7 @@ export default class carbon extends Component {
   
   componentWillMount() {
     PushNotificationIOS.addEventListener('register', this.onRegistered);
-    PushNotificationIOS.addEventListener('notification', this._onRemoteNotification);
+    PushNotificationIOS.addEventListener('notification', this.onRemoteNotification);
     PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
 
     PushNotificationIOS.requestPermissions();
@@ -50,7 +50,7 @@ export default class carbon extends Component {
 
   componentWillUnmount() {
     PushNotificationIOS.removeEventListener('register', this.onRegistered);
-    PushNotificationIOS.removeEventListener('notification', this._onRemoteNotification);
+    PushNotificationIOS.removeEventListener('notification', this.onRemoteNotification);
     PushNotificationIOS.removeEventListener('localNotification', this._onLocalNotification);
   }
   
@@ -61,8 +61,7 @@ export default class carbon extends Component {
     }
   }
 
-  _onRemoteNotification(notification) {
-    /*
+  onRemoteNotification(notification) {
     Alert.alert(
       'Friend Activity',
       notification.getMessage(),
@@ -71,7 +70,6 @@ export default class carbon extends Component {
         onPress: null,
       }]
     );
-    */
   }
 
   _onLocalNotification(notification){
