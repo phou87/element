@@ -57,21 +57,27 @@ class Portfolio extends Component {
 
   onBearish(cusip, comment) {
     ParseDispatcher.saveOpinion(this.props.superUser, cusip, comment, OPINIONS.BEARISH);
+
+    this.state.opinionCounts.incrementOpinion(cusip, OPINIONS.BEARISH);
     if (this.state.opinions[cusip] === OPINIONS.BULLISH) {
-      this.state.opinionCounts[cusip][OPINIONS.BULLISH] -= 1;
+      this.state.opinionCounts.decrementOpinion(cusip, OPINIONS.BULLISH);
     }
+
     this.state.opinions[cusip] = OPINIONS.BEARISH;
-    this.state.opinionCounts[cusip][OPINIONS.BEARISH] += 1;
+
     this.forceUpdate();
   }
 
   onBullish(cusip, comment) {
     ParseDispatcher.saveOpinion(this.props.superUser, cusip, comment, OPINIONS.BULLISH);
+
+    this.state.opinionCounts.incrementOpinion(cusip, OPINIONS.BULLISH);
     if (this.state.opinions[cusip] === OPINIONS.BEARISH) {
-      this.state.opinionCounts[cusip][OPINIONS.BEARISH] -= 1;
+      this.state.opinionCounts.decrementOpinion(cusip, OPINIONS.BEARISH);
     }
+
     this.state.opinions[cusip] = OPINIONS.BULLISH;
-    this.state.opinionCounts[cusip][OPINIONS.BULLISH] += 1;
+
     this.forceUpdate();
   }
   
@@ -125,12 +131,12 @@ class Portfolio extends Component {
     if (asset.removed) {
       return null;
     }
-    let opinions = this.state.opinionCounts[asset.attributes.cusip];
+
     let main = (
       <View key={asset.id} style={styles.assetRow}>
         <AssetCardSwipable
-          bearishCount={opinions ? opinions[OPINIONS.BEARISH] : 0}
-          bullishCount={opinions ? opinions[OPINIONS.BULLISH] : 0}
+          bearishCount={this.state.opinionCounts.getOpinionCount(asset.attributes.cusip, OPINIONS.BEARISH)}
+          bullishCount={this.state.opinionCounts.getOpinionCount(asset.attributes.cusip, OPINIONS.BULLISH)}
           comment={asset.attributes.comment}
           cusip={asset.attributes.cusip}
           id={asset.id}
@@ -168,12 +174,11 @@ class Portfolio extends Component {
   }
 
   renderLikedAsset(asset) {
-    let opinions = this.state.opinionCounts[asset.attributes.cusip];
     return (
       <View key={asset.attributes.cusip} style={styles.assetRow}>
         <AssetCardSwipable
-          bearishCount={opinions ? opinions[OPINIONS.BEARISH] : 0}
-          bullishCount={opinions ? opinions[OPINIONS.BULLISH] : 0}
+          bearishCount={this.state.opinionCounts.getOpinionCount(asset.attributes.cusip, OPINIONS.BEARISH)}
+          bullishCount={this.state.opinionCounts.getOpinionCount(asset.attributes.cusip, OPINIONS.BULLISH)}
           comment={asset.attributes.originalComment}
           cusip={asset.attributes.cusip}
           isLiked={true}

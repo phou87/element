@@ -5,6 +5,7 @@ import {AssetOpinion} from '../models/AssetOpinion';
 import {LikedAsset} from '../models/LikedAsset';
 import Friendship from '../models/Friendship'
 
+import {AssetOpinions} from '../common/AssetOpinions';
 import {OPINIONS} from '../common/constants';
 
 const ParseDispatcher = {
@@ -321,15 +322,10 @@ const ParseDispatcher = {
       query.containedIn("cusip", assets);
 
       let opinionResults = await query.find();
-      let opinions = {};
+      let opinions = new AssetOpinions();
 
       for (let opinion of opinionResults) {
-        if (!opinions[opinion.get("cusip")]) {
-          opinions[opinion.get("cusip")] = {[OPINIONS.BULLISH]: 0, [OPINIONS.BEARISH]: 0};
-        }
-        console.debug(opinions);
-        let oldValue = opinions[opinion.get("cusip")][opinion.get("opinion")];
-        opinions[opinion.get("cusip")][opinion.get("opinion")] = oldValue ? oldValue + 1 : 1;
+        opinions.incrementOpinion(opinion.get("cusip"), opinion.get("opinion"));
       }
 
       return opinions;
