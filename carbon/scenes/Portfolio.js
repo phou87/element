@@ -125,7 +125,7 @@ class Portfolio extends Component {
     if (asset.removed) {
       return null;
     }
-    let opinions = this.state.opinionCounts[asset.get("cusip")];
+    let opinions = this.state.opinionCounts[asset.attributes.cusip];
     let main = (
       <View key={asset.id} style={styles.assetRow}>
         <AssetCardSwipable
@@ -136,12 +136,12 @@ class Portfolio extends Component {
           id={asset.id}
           isLiked={this.isAssetLiked(asset.attributes.cusip)}
           isShort={false}
-          likeCount={this.state.likeCounts[asset.get("cusip")]}
+          likeCount={this.state.likeCounts[asset.attributes.cusip]}
           onBearish={this.onBearish}
           onBullish={this.onBullish}
           onClickLike={this.onClickLike}
           onRemoveAsset={this.props.ownPortfolio && this.onRemoveAsset}
-          opinion={this.state.opinions[asset.get("cusip")]}
+          opinion={this.state.opinions[asset.attributes.cusip]}
           updatedAt={asset.attributes.updatedAt.toDateString()}
         />
       </View>
@@ -168,7 +168,7 @@ class Portfolio extends Component {
   }
 
   renderLikedAsset(asset) {
-    let opinions = this.state.opinionCounts[asset.get("cusip")];
+    let opinions = this.state.opinionCounts[asset.attributes.cusip];
     return (
       <View key={asset.attributes.cusip} style={styles.assetRow}>
         <AssetCardSwipable
@@ -181,7 +181,7 @@ class Portfolio extends Component {
           onBearish={this.onBearish}
           onBullish={this.onBullish}
           onClickLike={this.unlikeLikedAsset}
-          opinion={this.state.opinions[asset.get("cusip")]}
+          opinion={this.state.opinions[asset.attributes.cusip]}
           removeOnUnlike={true}
         />
       </View>
