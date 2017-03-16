@@ -40,6 +40,9 @@ class Portfolio extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.loggedInUser === nextProps.loggedInUser) {
+      return;
+    }
     this.setState({expandedAssets: [], isLoading: true});
 		ParseDispatcher.getAllAssets(nextProps.loggedInUser, this.props.superUser, this.onGetAssets);
   }
@@ -48,14 +51,14 @@ class Portfolio extends Component {
     return this.state.likedAssets.findIndex(a => a.attributes.cusip === cusip) !== -1;
   }
   
-  onClickLike(cusip) {
+  onClickLike(cusip, comment) {
     if (this.isAssetLiked(cusip)) {
       ParseDispatcher.unlikeAsset(this.props.superUser, cusip);
       let index = this.state.likedAssets.findIndex(asset => asset.attributes.cusip === cusip);
       this.state.likedAssets.splice(index, 1);
       this.state.likeCounts[cusip] -= 1;
     } else {
-      ParseDispatcher.likeAsset(this.props.superUser, cusip);
+      ParseDispatcher.likeAsset(this.props.superUser, cusip, comment);
       this.state.likedAssets.push({attributes: {cusip}});
       this.state.likeCounts[cusip] += 1;
     }
@@ -137,6 +140,7 @@ class Portfolio extends Component {
     return (
       <View key={asset.attributes.cusip} style={styles.assetRow}>
         <AssetCardSwipable
+          comment={asset.attributes.originalComment}
           cusip={asset.attributes.cusip}
           isLiked={true}
           likeCount={this.state.likeCounts[asset.attributes.cusip]}

@@ -28,9 +28,9 @@ class AssetCard extends Component {
 
   onClickLike() {
     if (this.props.removeOnUnlike) {
-      this.props.onSwipe(() => this.props.onClickLike(this.props.cusip));
+      this.props.onSwipe(() => this.props.onClickLike(this.props.cusip, this.props.comment));
     } else {
-      this.props.onClickLike(this.props.cusip);
+      this.props.onClickLike(this.props.cusip, this.props.comment);
     }
   }
 

@@ -107,8 +107,8 @@ const ParseDispatcher = {
     });
   },
 
-  likeAsset(user, cusip, likedFrom) {
-    let asset = new LikedAsset(cusip, user, likedFrom);
+  likeAsset(user, cusip, comment, likedFrom) {
+    let asset = new LikedAsset(cusip, user, likedFrom, comment);
     asset.save({
       success: result => console.log('yay', result),
       error: (result, error) => console.debug(error),

@@ -1,4 +1,5 @@
 import {FacebookURI} from '../common/FacebookURI';
+import ParseDispatcher from './ParseDispatcher';
 
 const FacebookDispatcher = {
   async fetchFriends(loggedInUser) {
@@ -27,7 +28,13 @@ const FacebookDispatcher = {
       }
     }
 
-    return [potentialFriends, existingFriends];
+    let followerCounts = await ParseDispatcher.getFollowerCounts(data.map(friend => friend.id));
+    let getFollowerCount = friend => followerCounts[friend.id] ? followerCounts[friend.id] : 0;
+
+    existingFriends.sort((b, a) => getFollowerCount(a) - getFollowerCount(b));
+    potentialFriends.sort((b, a) => getFollowerCount(a) - getFollowerCount(b));
+
+    return [potentialFriends, existingFriends, followerCounts];
   },
   
   async fetchName(loggedInUser) {

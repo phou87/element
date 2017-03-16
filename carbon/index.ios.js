@@ -125,10 +125,12 @@ export default class carbon extends Component {
   }
   
   async refreshFriends() {
-		let [potentialFriends, existingFriends] = await FacebookDispatcher.fetchFriends(this.state.loggedInUser);
+    let [potentialFriends, existingFriends, followerCounts] =
+      await FacebookDispatcher.fetchFriends(this.state.loggedInUser);
     this.setState({
       potentialFriends,
       existingFriends,
+      followerCounts,
     });
   }
   

@@ -60,7 +60,7 @@ class FriendRow extends Component {
       <ListItem theme={mytheme2}>
         <Thumbnail square size={75} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
-            <Text note>Followers: {this.props.followerCount}</Text>
+            <Text note>Followers: {this.props.followerCount ? this.props.followerCount : 0}</Text>
         {this.renderRightRowSection(this.props.friend)}
       </ListItem>
     );
@@ -80,16 +80,8 @@ class FollowingFriends extends Component {
 
   async componentWillMount() {
     await this.props.refreshFriends();
-    await this.getFollowerCounts();
     this.setState({
       isLoading: false,
-    });
-  }
-
-  async getFollowerCounts() {
-    let followerCounts = await ParseDispatcher.getFollowerCounts(this.props.existingFriends.map(friend => friend.id));
-    this.setState({
-      followerCounts,
     });
   }
 
@@ -103,7 +95,7 @@ class FollowingFriends extends Component {
     return this.props.existingFriends.map(friend =>
       <FriendRow
         accessToken={authData.access_token}
-        followerCount={this.state.followerCounts[friend.id]}
+        followerCount={this.props.followerCounts[friend.id]}
         friend={friend}
         key={friend.id}
         loggedInUser={this.props.loggedInUser}

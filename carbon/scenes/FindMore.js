@@ -34,8 +34,8 @@ class PotentialFriendRow extends Component {
 
     return (
       <Button rounded block onPress={this.onAddFriend} style={styles.addButton} success>
-            <Icon name='ios-add-circle' />
-            Add
+        <Icon name='ios-add-circle' />
+        Add
       </Button>
     );
   }
@@ -53,7 +53,7 @@ class PotentialFriendRow extends Component {
       <ListItem theme={mytheme2}>
         <Thumbnail square size={75} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
-        <Text note>Followers: {this.props.followerCount}</Text>
+        <Text note>Followers: {this.props.followerCount ? this.props.followerCount : 0}</Text>
         {this._renderRightRowSection(this.props.friend)}
       </ListItem>
     );
@@ -89,6 +89,7 @@ class FindMore extends Component {
     return this.props.potentialFriends.map(friend =>
       <PotentialFriendRow
         accessToken={authData.access_token}
+        followerCount={this.props.followerCounts[friend.id]}
         friend={friend}
         key={friend.id}
         loggedInUser={this.props.loggedInUser}
