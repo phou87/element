@@ -63,44 +63,53 @@ class MainViewFrame extends Component {
 
   render() {
     return (
-      <Container theme={mytheme}>
-        <Header iconRight>
-          <Title>{this.props.title}</Title>
-          <Button onPress={this.onToggleMenu} transparent>
-            <Icon name='ios-menu' />
-          </Button>
-        </Header>
-        <Content style={styles.content}>
-          <StatusBar />
-          {this.props.children}
-          {this.renderSettings()}
-        </Content>
-        <Footer>
-          <FooterTab>
-            <Button active={this.props.scene === SCENES.FIND_FRIENDS} onPress={this.onSwitchFindFriends}>
-              Find More
-              <Icon name='ios-person-add' />
+      <View style={styles.container}>
+        <Container theme={mytheme}>
+          <Header iconRight>
+            <Title>{this.props.title}</Title>
+            <Button onPress={this.onToggleMenu} transparent>
+              <Icon name='ios-menu' />
             </Button>
-            <Button active={this.props.scene === SCENES.FOLLOWING_FRIENDS} onPress={this.onSwitchFriends}>
-              Following
-              <Icon name='ios-body' />
-            </Button>
-            <Button active={this.props.scene === SCENES.PORTFOLIO} onPress={this.onSwitchPortfolio}>
-              Portfolio
-              <Icon name='ios-trending-up' />
-            </Button>
-            <Button active={this.props.scene === SCENES.BUY_SELL} onPress={this.onSwitchBuySell}>
-              Trade
-              <Icon name='logo-usd' />
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
+          </Header>
+
+          <Content style={styles.content}>
+            <StatusBar />
+            {this.props.children}
+          </Content>
+
+          <Footer>
+            <FooterTab>
+              <Button active={this.props.scene === SCENES.FIND_FRIENDS} onPress={this.onSwitchFindFriends}>
+                Find More
+                <Icon name='ios-person-add' />
+              </Button>
+              <Button active={this.props.scene === SCENES.FOLLOWING_FRIENDS} onPress={this.onSwitchFriends}>
+                Following
+                <Icon name='ios-body' />
+              </Button>
+              <Button active={this.props.scene === SCENES.PORTFOLIO} onPress={this.onSwitchPortfolio}>
+                Portfolio
+                <Icon name='ios-trending-up' />
+              </Button>
+              <Button active={this.props.scene === SCENES.BUY_SELL} onPress={this.onSwitchBuySell}>
+                Trade
+                <Icon name='logo-usd' />
+              </Button>
+            </FooterTab>
+          </Footer>
+        </Container>
+        {this.renderSettings()}
+      </View>
     );
   }
 }
 
+const HEADER_HEIGHT = 60;
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   content: {
     backgroundColor: '#F8F9F9',
     flex: 1,
@@ -110,8 +119,9 @@ const styles = StyleSheet.create({
   },
   settingsContainer: {
     backgroundColor: '#F8F9F9',
-    height: deviceScreen.height,
+    height: deviceScreen.height - HEADER_HEIGHT,
     position: 'absolute',
+    top: HEADER_HEIGHT,
     width: deviceScreen.width,
   },
 });
