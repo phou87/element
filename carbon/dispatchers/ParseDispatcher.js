@@ -245,6 +245,35 @@ const ParseDispatcher = {
       },
     });
   },
+
+  async getFollowerCount(user) {
+    let query = new Parse.Query(Friendship);
+    query.equalTo("friend_id", user.get("facebookID"));
+    try {
+      return await query.count();
+    } catch (error) {
+      console.debug(error);
+      return 0;
+    }
+  },
+
+  async getFollowerCounts(user_ids) {
+    let query = new Parse.Query(Friendship);
+    query.containedIn("friend_id", user_ids);
+    try {
+      let counts = {};
+      let results = await query.find();
+      for (let result of results) {
+        let value = counts[result.get("friend_id")];
+        counts[result.get("friend_id")] = value ? value + 1 : 1;
+      }
+      console.debug(counts);
+      return counts;
+    } catch (error) {
+      console.debug(error);
+      return {};
+    }
+  },
 }
 
 module.exports = ParseDispatcher;

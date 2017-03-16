@@ -37,7 +37,7 @@ class FriendRow extends Component {
             <View>
                 <Button small rounded block onPress={this.onRemoveFriend} style={styles.removeButton} success>
                     <Icon name='ios-remove-circle' />
-                    <Text style={styles.friendName}>Unfollow</Text>
+                    <Text style={styles.friendName}>Unfollow ({this.props.followerCount})</Text>
                 </Button>
                 <Button small rounded block onPress={this.onSwitchPortfolio} style={styles.removeButton} info>
                     <Icon name='ios-trending-up' />
@@ -70,6 +70,7 @@ class FollowingFriends extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      counts: {},
       isLoading: true,
     };
     
@@ -78,8 +79,16 @@ class FollowingFriends extends Component {
 
   async componentWillMount() {
     await this.props.refreshFriends();
+    await this.getFollowerCounts();
     this.setState({
       isLoading: false,
+    });
+  }
+
+  async getFollowerCounts() {
+    let followerCounts = await ParseDispatcher.getFollowerCounts(this.props.existingFriends.map(friend => friend.id));
+    this.setState({
+      followerCounts,
     });
   }
 
@@ -93,6 +102,7 @@ class FollowingFriends extends Component {
     return this.props.existingFriends.map(friend =>
       <FriendRow
         accessToken={authData.access_token}
+        followerCount={this.state.followerCounts[friend.id]}
         friend={friend}
         key={friend.id}
         loggedInUser={this.props.loggedInUser}

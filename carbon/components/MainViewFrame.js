@@ -56,7 +56,7 @@ class MainViewFrame extends Component {
   
     return (
       <Animated.View style={[styles.settingsContainer, transformStyle]}>
-        <Settings onLogout={this.props.onLogout} />
+        <Settings loggedInUser={this.props.loggedInUser} onLogout={this.props.onLogout} />
       </Animated.View>
     );
   }
