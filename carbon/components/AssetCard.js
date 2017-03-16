@@ -48,7 +48,7 @@ class AssetCard extends Component {
         <View>
           <Text style={styles.commentTexttitle}>Comment on the Stock:</Text>
           <Text style={styles.commentText}>
-            {this.props.comment ? this.props.comment : 'Nothing to say - this stock speaks for itself'}
+            {this.props.comment ? this.props.comment : 'No comment provided'}
           </Text>
         </View>
       );
@@ -92,12 +92,29 @@ class AssetCard extends Component {
           style={styles.closeButton}
           transparent
         >
-          <Icon name='ios-close-circle' style={{fontSize: 25, color: '#5cb85c'}} />
+          <Icon name='ios-close-circle' style={{fontSize: 25, color: '#f0ad4e'}} />
         </Button>}
       </View>
     );
   }
 
+renderBullish() {
+        return (
+          <View style={styles.cardFooter}>
+             <Button small success rounded >
+                <Text style={styles.bullbutton}>Bullish</Text>
+             </Button>
+             <Button small danger rounded >
+                <Text style={styles.bullbutton}>Bearish</Text>
+             </Button>
+          </View>
+                );
+    }
+    
+    
+    
+    
+    
   render() {
     return (
       <Card theme={mytheme}>
@@ -114,7 +131,10 @@ class AssetCard extends Component {
         <CardItem cardBody>
           {this.renderCommentSection()}
         </CardItem>
-
+   
+        <CardItem>
+        {this.renderBullish()}
+        </CardItem>
         <CardItem>
           {this.renderFooter()}
         </CardItem>
@@ -162,6 +182,13 @@ const styles = StyleSheet.create({
   fontWeight: '500',
   fontSize: 14,
   marginTop: 0,
+  },
+  bullbutton: {
+    color: 'white',
+    fontWeight: '300',
+    fontSize: 14,
+    marginLeft: 10,
+    marginRight: 10,
   }
 });
 
