@@ -37,7 +37,7 @@ class FriendRow extends Component {
             <View>
                 <Button small rounded block onPress={this.onRemoveFriend} style={styles.removeButton} success>
                     <Icon name='ios-remove-circle' />
-                    <Text style={styles.friendName}>Unfollow ({this.props.followerCount})</Text>
+                    <Text style={styles.friendName}>Unfollow</Text>
                 </Button>
                 <Button small rounded block onPress={this.onSwitchPortfolio} style={styles.removeButton} info>
                     <Icon name='ios-trending-up' />
@@ -58,8 +58,9 @@ class FriendRow extends Component {
 
     return (
       <ListItem theme={mytheme2}>
-        <Thumbnail circle size={50} source={{uri: uri.getURI()}} />
+        <Thumbnail square size={75} source={{uri: uri.getURI()}} />
         <Text style={styles.friendName}>{this.props.friend.name}</Text>
+            <Text note>Followers: {this.props.followerCount}</Text>
         {this.renderRightRowSection(this.props.friend)}
       </ListItem>
     );

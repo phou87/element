@@ -42,7 +42,8 @@ class Settings extends Component {
     return (
       <List>
         <ListItem iconLeft>
-          <Text>Followers: {this.state.followerCount}</Text>
+          <Icon name="ios-person" style={{ color: '#5bc0de' }} />
+          <Text>Your Followers: {this.state.followerCount}</Text>
         </ListItem>
         <ListItem iconLeft>
           <Icon name="ios-notifications" style={{ color: '#5bc0de' }} />
