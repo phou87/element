@@ -6,3 +6,8 @@ export const SCENES = {
   BUY_SELL: 4,
   FRIEND_PORTFOLIO: 5,
 };
+
+export const OPINIONS = {
+  BEARISH: 0,
+  BULLISH: 1,
+};

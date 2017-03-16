@@ -1,8 +1,11 @@
 import Parse from 'parse/react-native';
 
 import Asset from '../models/Asset'
+import {AssetOpinion} from '../models/AssetOpinion';
 import {LikedAsset} from '../models/LikedAsset';
 import Friendship from '../models/Friendship'
+
+import {OPINIONS} from '../common/constants';
 
 const ParseDispatcher = {
 	loginWithFacebook(credentials, callback) {
@@ -147,15 +150,17 @@ const ParseDispatcher = {
       }
 
 			let likedCounts = await ParseDispatcher.getLikeCountForAssets(user, relevantAssets, likedResults);
+      let opinions = await ParseDispatcher.getOpinionsForAssets(superUser, relevantAssets);
+      let opinionCounts = await ParseDispatcher.getOpinionCountsForAssets(user, relevantAssets);
 
-      callback(results, likedResults, likedCounts);
+      callback(results, likedResults, likedCounts, opinions, opinionCounts);
     } catch (error) {
       console.debug(error);
       callback([], [], []);
     }
   },
 
-  async getLikeCountForAssets(user, assets, likedResults) {
+  async getLikeCountForAssets(user, assets) {
     /*
     let friendships = user.relation("friendships");
 
@@ -179,18 +184,31 @@ const ParseDispatcher = {
         assetMap[asset.get("cusip")] = oldValue ? oldValue + 1 : 1;
       }
 
-      for (let asset of likedResults) {
-        let oldValue = assetMap[asset.get("cusip")];
-        assetMap[asset.get("cusip")] = oldValue ? oldValue + 1 : 1;
-      }
-
       return assetMap;
     } catch (error) {
       console.debug(error);
       return {};
     }
   },
-  
+
+  async getOpinionsForAssets(user, assets) {
+    let query = new Parse.Query(AssetOpinion);
+    query.equalTo("owner", user);
+    query.containedIn("cusip", assets);
+    try {
+      let results = await query.find();
+      console.debug('found results', results);
+      let opinions = {};
+      for (let result of results) {
+        opinions[result.get("cusip")] = result.get("opinion");
+      }
+      return opinions;
+    } catch (error) {
+      console.debug(error);
+      return {};
+    }
+  },
+
   removeAsset(user, cusip, isShort, callback) {
     console.debug('remove attemt', user, cusip, isShort);
     ParseDispatcher.getAsset(user, cusip, isShort, (asset, error) => {
@@ -269,6 +287,52 @@ const ParseDispatcher = {
       }
       console.debug(counts);
       return counts;
+    } catch (error) {
+      console.debug(error);
+      return {};
+    }
+  },
+
+  async saveOpinion(user, cusip, comment, opinion) {
+    let query = new Parse.Query(AssetOpinion);
+    query.equalTo("owner", user);
+    query.equalTo("cusip", cusip);
+
+    try {
+      let results = await query.find();
+      if (results.length) {
+        let result = results[0];
+        result.set("opinion", opinion);
+        await result.save();
+        return;
+      }
+
+      let newOpinion = new AssetOpinion(cusip, user, comment, opinion);
+      await newOpinion.save();
+    } catch (error) {
+      console.debug(error);
+      return;
+    }
+  },
+
+  async getOpinionCountsForAssets(user, assets) {
+    try {
+      let query = new Parse.Query(AssetOpinion);
+      query.containedIn("cusip", assets);
+
+      let opinionResults = await query.find();
+      let opinions = {};
+
+      for (let opinion of opinionResults) {
+        if (!opinions[opinion.get("cusip")]) {
+          opinions[opinion.get("cusip")] = {[OPINIONS.BULLISH]: 0, [OPINIONS.BEARISH]: 0};
+        }
+        console.debug(opinions);
+        let oldValue = opinions[opinion.get("cusip")][opinion.get("opinion")];
+        opinions[opinion.get("cusip")][opinion.get("opinion")] = oldValue ? oldValue + 1 : 1;
+      }
+
+      return opinions;
     } catch (error) {
       console.debug(error);
       return {};

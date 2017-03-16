@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import {Button, Card, CardItem, Icon, Tabs, Text} from 'native-base';
 import {Container, Content, Spinner} from 'native-base';
 
+import {OPINIONS} from '../common/constants';
 import ParseDispatcher from '../dispatchers/ParseDispatcher';
 import {AssetCard} from '../components/AssetCard';
 import {SwipeableComponent} from '../components/SwipeableComponent';
@@ -25,9 +26,12 @@ class Portfolio extends Component {
       isLoading: true,
       likedAssets: [],
       likeCounts: {},
+      opinions: {},
       testIsLiked: false,
     };
-    
+
+    this.onBearish = this.onBearish.bind(this);
+    this.onBullish = this.onBullish.bind(this);
     this.onClickLike = this.onClickLike.bind(this);
     this.onGetAssets = this.onGetAssets.bind(this);
     this.onRemoveAsset = this.onRemoveAsset.bind(this);
@@ -50,6 +54,26 @@ class Portfolio extends Component {
   isAssetLiked(cusip) {
     return this.state.likedAssets.findIndex(a => a.attributes.cusip === cusip) !== -1;
   }
+
+  onBearish(cusip, comment) {
+    ParseDispatcher.saveOpinion(this.props.superUser, cusip, comment, OPINIONS.BEARISH);
+    if (this.state.opinions[cusip] === OPINIONS.BULLISH) {
+      this.state.opinionCounts[cusip][OPINIONS.BULLISH] -= 1;
+    }
+    this.state.opinions[cusip] = OPINIONS.BEARISH;
+    this.state.opinionCounts[cusip][OPINIONS.BEARISH] += 1;
+    this.forceUpdate();
+  }
+
+  onBullish(cusip, comment) {
+    ParseDispatcher.saveOpinion(this.props.superUser, cusip, comment, OPINIONS.BULLISH);
+    if (this.state.opinions[cusip] === OPINIONS.BEARISH) {
+      this.state.opinionCounts[cusip][OPINIONS.BEARISH] -= 1;
+    }
+    this.state.opinions[cusip] = OPINIONS.BULLISH;
+    this.state.opinionCounts[cusip][OPINIONS.BULLISH] += 1;
+    this.forceUpdate();
+  }
   
   onClickLike(cusip, comment) {
     if (this.isAssetLiked(cusip)) {
@@ -66,7 +90,7 @@ class Portfolio extends Component {
     this.forceUpdate();
   }
   
-  onGetAssets(assets, likedAssets, likeCounts) {
+  onGetAssets(assets, likedAssets, likeCounts, opinions, opinionCounts) {
 		likedAssets.sort((asset1, asset2) =>
       likeCounts[asset2.attributes.cusip] - likeCounts[asset1.attributes.cusip]
     );
@@ -76,6 +100,8 @@ class Portfolio extends Component {
       isLoading: false,
       likedAssets,
       likeCounts,
+      opinions,
+      opinionCounts,
     });
   }
   
@@ -99,18 +125,23 @@ class Portfolio extends Component {
     if (asset.removed) {
       return null;
     }
-
+    let opinions = this.state.opinionCounts[asset.get("cusip")];
     let main = (
       <View key={asset.id} style={styles.assetRow}>
         <AssetCardSwipable
+          bearishCount={opinions ? opinions[OPINIONS.BEARISH] : 0}
+          bullishCount={opinions ? opinions[OPINIONS.BULLISH] : 0}
           comment={asset.attributes.comment}
           cusip={asset.attributes.cusip}
           id={asset.id}
           isLiked={this.isAssetLiked(asset.attributes.cusip)}
           isShort={false}
           likeCount={this.state.likeCounts[asset.get("cusip")]}
+          onBearish={this.onBearish}
+          onBullish={this.onBullish}
           onClickLike={this.onClickLike}
           onRemoveAsset={this.props.ownPortfolio && this.onRemoveAsset}
+          opinion={this.state.opinions[asset.get("cusip")]}
           updatedAt={asset.attributes.updatedAt.toDateString()}
         />
       </View>
@@ -137,14 +168,20 @@ class Portfolio extends Component {
   }
 
   renderLikedAsset(asset) {
+    let opinions = this.state.opinionCounts[asset.get("cusip")];
     return (
       <View key={asset.attributes.cusip} style={styles.assetRow}>
         <AssetCardSwipable
+          bearishCount={opinions ? opinions[OPINIONS.BEARISH] : 0}
+          bullishCount={opinions ? opinions[OPINIONS.BULLISH] : 0}
           comment={asset.attributes.originalComment}
           cusip={asset.attributes.cusip}
           isLiked={true}
           likeCount={this.state.likeCounts[asset.attributes.cusip]}
+          onBearish={this.onBearish}
+          onBullish={this.onBullish}
           onClickLike={this.unlikeLikedAsset}
+          opinion={this.state.opinions[asset.get("cusip")]}
           removeOnUnlike={true}
         />
       </View>

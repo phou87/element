@@ -6,6 +6,7 @@ import {
 import React, { Component } from 'react';
 import {Button, Card, CardItem, Icon, Input, InputGroup, Tabs, Text} from 'native-base';
 
+import {OPINIONS} from '../common/constants'
 import mytheme from '../common/mytheme';
 
 class AssetCard extends Component {
@@ -15,11 +16,21 @@ class AssetCard extends Component {
       comment: props.comment,
       editing: false,
     };
-    
+
+    this.onBearish = this.onBearish.bind(this);
+    this.onBullish = this.onBullish.bind(this);
     this.onChangeComment = this.onChangeComment.bind(this);
     this.onClickLike = this.onClickLike.bind(this);
     this.onEditAsset = this.onEditAsset.bind(this);
     this.onRemoveAsset = this.onRemoveAsset.bind(this);
+  }
+
+  onBearish() {
+		this.props.onBearish(this.props.cusip);
+  }
+
+  onBullish() {
+		this.props.onBullish(this.props.cusip);
   }
 
   onChangeComment(comment) {
@@ -98,23 +109,33 @@ class AssetCard extends Component {
     );
   }
 
-renderBullish() {
-        return (
-          <View style={styles.cardFooter}>
-             <Button small success rounded >
-                <Text style={styles.bullbutton}>Bullish</Text>
-             </Button>
-             <Button small danger rounded >
-                <Text style={styles.bullbutton}>Bearish</Text>
-             </Button>
-          </View>
-                );
-    }
-    
-    
-    
-    
-    
+  renderOpinion() {
+    let opinion = this.props.opinion;
+
+    return (
+      <View style={styles.cardFooter}>
+        <Button
+          disabled={opinion === OPINIONS.BULLISH}
+          onPress={this.onBullish}
+          small
+          success={opinion !== OPINIONS.BULLISH}
+          rounded
+        >
+          <Text style={styles.bullbutton}>Bullish: {this.props.bullishCount}</Text>
+        </Button>
+        <Button
+          disabled={opinion === OPINIONS.BEARISH}
+          onPress={this.onBearish}
+          small
+          danger={opinion !== OPINIONS.BEARISH}
+          rounded
+        >
+          <Text style={styles.bullbutton}>Bearish: {this.props.bearishCount}</Text>
+        </Button>
+      </View>
+    );
+  }
+
   render() {
     return (
       <Card theme={mytheme}>
@@ -133,7 +154,7 @@ renderBullish() {
         </CardItem>
    
         <CardItem>
-        {this.renderBullish()}
+        {this.renderOpinion()}
         </CardItem>
         <CardItem>
           {this.renderFooter()}
