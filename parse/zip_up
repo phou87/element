@@ -1,3 +1,0 @@
-#!/bin/bash
-
-zip ../myapp.zip -r * .[^.]*
